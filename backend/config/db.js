@@ -9,11 +9,13 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-// Set public DNS servers to reliably resolve MongoDB Atlas SRV records on Windows networks
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch (e) {
-  // Fallback
+// Set public DNS servers on local Windows networks if needed, skip in Linux/cloud production environments (e.g. Render)
+if (process.platform === 'win32' && process.env.NODE_ENV !== 'production') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch (e) {
+    // Fallback
+  }
 }
 
 const connectDB = async () => {

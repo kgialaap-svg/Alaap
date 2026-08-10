@@ -4,9 +4,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "start": "npm --prefix backend run start",
     "dev": "npm --prefix frontend run dev",
     "server": "npm --prefix backend run start",
-    "build": "npm --prefix frontend run build"
+    "build": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build"
   },
   "dependencies": {
     "cors": "^2.8.5",

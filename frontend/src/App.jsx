@@ -18,6 +18,8 @@ import HistoryTab, { CLUB_MILESTONES } from './pages/HistoryTab';
 import DatesTab from './pages/DatesTab';
 import AdminPage from './pages/AdminPage';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export default function App() {
   const [currentTab, setCurrentTab] = useState('home');
 
@@ -50,8 +52,8 @@ export default function App() {
     // Clean up obsolete localStorage event cache
     localStorage.removeItem('allap_events_v8');
 
-    // Fetch live hosted events directly from MongoDB API server
-    fetch('http://localhost:5000/api/events')
+    // Fetch live hosted events directly from MongoDB API server (Local or Render)
+    fetch(`${API_BASE_URL}/api/events`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
@@ -319,7 +321,7 @@ export default function App() {
 
     // Save directly to MongoDB Atlas API server
     try {
-      const res = await fetch('http://localhost:5000/api/events', {
+      const res = await fetch(`${API_BASE_URL}/api/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newEvent)
@@ -339,7 +341,7 @@ export default function App() {
   // Delete Campus Event (Admin Only) - Connects to MongoDB Atlas API
   const handleDeleteEvent = async (eventId) => {
     try {
-      await fetch(`http://localhost:5000/api/events/${eventId}`, {
+      await fetch(`${API_BASE_URL}/api/events/${eventId}`, {
         method: 'DELETE'
       });
     } catch (err) {
