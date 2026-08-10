@@ -1,0 +1,17 @@
+{
+  "name": "alaap-music-club-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "server": "npm --prefix backend run start",
+    "build": "npm --prefix frontend run build"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.12.0"
+  }
+}
