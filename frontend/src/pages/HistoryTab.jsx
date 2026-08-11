@@ -525,27 +525,31 @@ export default function HistoryTab({
               <BookOpen className="w-12 h-12 text-tertiary mx-auto animate-bounce" />
               <h3 className="text-xl font-bold text-on-surface">No History Events Archived</h3>
               <p className="text-sm font-body text-on-surface-variant max-w-md mx-auto">
-                No event milestones found in the history section. Admins can add the first event using the button below.
+                {isAdminLoggedIn
+                  ? 'No event milestones found in the history section. Admins can add the first event using the button below.'
+                  : 'No event milestones found in the history section.'}
               </p>
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-                <button
-                  onClick={handleAddEventClick}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-mono text-xs font-bold shadow-lg hover:opacity-90 transition-all cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Create First History Event</span>
-                </button>
-
-                {onRestoreMilestones && (
+              {isAdminLoggedIn && (
+                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                   <button
-                    onClick={onRestoreMilestones}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-mono text-xs font-bold shadow-md hover:bg-surface-container-highest transition-all cursor-pointer"
+                    onClick={handleAddEventClick}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-mono text-xs font-bold shadow-lg hover:opacity-90 transition-all cursor-pointer"
                   >
-                    <Sparkles className="w-4 h-4 text-emerald-400" />
-                    <span>Restore Default Milestones</span>
+                    <Plus className="w-4 h-4" />
+                    <span>Create First History Event</span>
                   </button>
-                )}
-              </div>
+
+                  {onRestoreMilestones && (
+                    <button
+                      onClick={onRestoreMilestones}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface font-mono text-xs font-bold shadow-md hover:bg-surface-container-highest transition-all cursor-pointer"
+                    >
+                      <Sparkles className="w-4 h-4 text-emerald-400" />
+                      <span>Restore Default Milestones</span>
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           ) : (
             <div className="relative border-l-2 border-outline-variant/20 ml-4 md:ml-32 space-y-10 pb-12">

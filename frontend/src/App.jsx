@@ -52,7 +52,7 @@ export default function App() {
     // Clean up obsolete localStorage event cache
     localStorage.removeItem('allap_events_v8');
 
-    // Fetch live hosted events directly from MongoDB API server (Local or Render)
+    // Fetch live hosted events directly from API server (Local or Render)
     fetch(`${API_BASE_URL}/api/events`)
       .then(res => res.json())
       .then(data => {
@@ -63,7 +63,7 @@ export default function App() {
         }
       })
       .catch((err) => {
-        console.warn('Could not fetch live events from MongoDB API server:', err.message);
+        console.warn('Could not fetch live events from API server:', err.message);
         setEvents([]);
       });
 
@@ -296,7 +296,7 @@ export default function App() {
     return `${y}-${m}-${d}`;
   };
 
-  // 4. Create Campus Event Handler (Admin Only) - Connects to MongoDB Atlas API
+  // 4. Create Campus Event Handler (Admin Only) - Connects to API server
   const handleAddEvent = async (newEventData) => {
     const timestamp = Date.now();
     const eventId = newEventData.id || `e_${timestamp}`;
@@ -319,7 +319,7 @@ export default function App() {
       accentColor: newEventData.accentColor || (newEventData.category === 'Concert' ? 'tertiary' : 'primary')
     };
 
-    // Save directly to MongoDB Atlas API server
+    // Save directly to API server
     try {
       const res = await fetch(`${API_BASE_URL}/api/events`, {
         method: 'POST',
@@ -333,19 +333,19 @@ export default function App() {
         setEvents((prev) => [newEvent, ...prev]);
       }
     } catch (err) {
-      console.warn('MongoDB Atlas API server offline:', err.message);
+      console.warn('API server offline:', err.message);
       setEvents((prev) => [newEvent, ...prev]);
     }
   };
 
-  // Delete Campus Event (Admin Only) - Connects to MongoDB Atlas API
+  // Delete Campus Event (Admin Only) - Connects to API server
   const handleDeleteEvent = async (eventId) => {
     try {
       await fetch(`${API_BASE_URL}/api/events/${eventId}`, {
         method: 'DELETE'
       });
     } catch (err) {
-      console.warn('Error deleting event from MongoDB:', err.message);
+      console.warn('Error deleting event:', err.message);
     }
     setEvents((prev) => prev.filter((e) => e.id !== eventId && e._id !== eventId));
   };
@@ -716,7 +716,7 @@ export default function App() {
                 title="Click to visit @kashimusic23 on Instagram"
               >
                 <img
-                  src="/instagram_qr.png"
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fwww.instagram.com%2Fkashimusic23%2F"
                   alt="Instagram QR Code - @kashimusic23"
                   className="w-44 h-44 md:w-48 md:h-48 object-contain rounded-xl"
                 />

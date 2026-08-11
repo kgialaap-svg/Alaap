@@ -87,7 +87,7 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
       onAddEvent(newEventPayload);
     }
 
-    message.success(`🚀 Event "${title}" published directly to MongoDB Atlas!`);
+    message.success(`🚀 Event "${title}" published successfully!`);
 
     // Reset Form State
     setTitle('');
@@ -112,7 +112,7 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-xs font-mono text-emerald-400 uppercase tracking-widest font-semibold">
-              Alaap Schedule (MongoDB Atlas Sync)
+              Alaap Schedule (Live Sync)
             </span>
           </div>
           <h2 className="font-sans text-3xl sm:text-4xl font-extrabold text-on-surface mt-1">
@@ -148,13 +148,13 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
             {isSuperAdmin ? <Crown className="w-4 h-4 text-amber-400 shrink-0" /> : <ShieldCheck className="w-4 h-4 shrink-0" />}
             <span className="font-bold">
               {isSuperAdmin
-                ? "👑 Super Admin Mode Active: Events created are saved to MongoDB Atlas & hosted directly to visitors."
-                : "🛡️ Admin Mode Active: Create & publish events directly to MongoDB Atlas."
+                ? "👑 Super Admin Mode Active: Events created are saved & hosted directly to visitors."
+                : "🛡️ Admin Mode Active: Create & publish events directly."
               }
             </span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <Tag color="cyan">⚡ MongoDB Atlas Live Sync</Tag>
+            <Tag color="cyan">⚡ Live Sync Active</Tag>
           </div>
         </div>
       )}
@@ -171,7 +171,7 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/15">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-sans font-extrabold text-xl text-on-surface">Publish Event to MongoDB Atlas</h3>
+                <h3 className="font-sans font-extrabold text-xl text-on-surface">Publish Event</h3>
               </div>
               <button
                 type="button"
@@ -390,7 +390,7 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
                   type="submit"
                   className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 text-slate-950 font-mono text-xs font-black tracking-wider uppercase shadow-lg hover:shadow-emerald-500/25 cursor-pointer"
                 >
-                  Save & Publish to MongoDB
+                  Save & Publish Event
                 </button>
               </div>
             </form>
@@ -399,7 +399,7 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
       </AnimatePresence>
 
       {/* ========================================================================= */}
-      {/* EVENTS DYNAMIC LIST: RENDER ONLY LIVE EVENTS FROM MONGODB DATABASE       */}
+      {/* EVENTS DYNAMIC LIST: RENDER ONLY LIVE EVENTS                              */}
       {/* ========================================================================= */}
       {events && events.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -424,7 +424,7 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
                   </span>
                   <span className="text-[10px] font-mono tracking-widest uppercase font-extrabold px-2.5 py-1 rounded-lg backdrop-blur-md bg-gradient-to-r from-emerald-500/80 via-teal-500/80 to-tertiary/80 text-white border border-emerald-300/40 flex items-center gap-1 shadow-lg">
                     <Sparkles className="w-3 h-3 text-amber-300 animate-pulse" />
-                    <span>MongoDB Live Event</span>
+                    <span>Live Event</span>
                   </span>
                 </div>
 
@@ -433,7 +433,7 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
                   <button
                     onClick={() => onDeleteEvent(evt.id || evt._id)}
                     className="absolute top-3 right-3 p-2 rounded-xl bg-red-500/80 text-white hover:bg-red-600 backdrop-blur-md transition-all shadow-lg opacity-0 group-hover:opacity-100"
-                    title="Delete Event from MongoDB"
+                    title="Delete Event"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -494,14 +494,14 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
           ))}
         </div>
       ) : (
-        /* EMPTY STATE WHEN NO MONGODB EVENTS EXIST */
+        /* EMPTY STATE WHEN NO EVENTS EXIST */
         <div className="glass-card rounded-3xl p-12 text-center border border-outline-variant/15 max-w-lg mx-auto my-12">
           <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
             <Calendar className="w-8 h-8" />
           </div>
-          <h3 className="font-sans font-bold text-xl text-on-surface mb-2">No MongoDB Events Found</h3>
+          <h3 className="font-sans font-bold text-xl text-on-surface mb-2">No Events Scheduled</h3>
           <p className="font-body text-sm text-on-surface-variant leading-relaxed mb-6">
-            There are currently no events saved in your MongoDB database. All hardcoded/cached fallback events have been cleared.
+            There are currently no events scheduled in the calendar.
           </p>
           {isAdminLoggedIn ? (
             <button
@@ -509,7 +509,7 @@ export default function EventsTab({ events = [], onAddEvent, onDeleteEvent, isAd
               className="px-6 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-mono text-xs font-black uppercase tracking-wider inline-flex items-center gap-2 hover:bg-emerald-400 transition-colors"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
-              <span>Create First MongoDB Event</span>
+              <span>Create First Event</span>
             </button>
           ) : (
             <p className="font-mono text-xs text-outline">
