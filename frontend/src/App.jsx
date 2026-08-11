@@ -18,7 +18,7 @@ import HistoryTab, { CLUB_MILESTONES } from './pages/HistoryTab';
 import DatesTab from './pages/DatesTab';
 import AdminPage from './pages/AdminPage';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://alaap-s6yq.onrender.com';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('home');
