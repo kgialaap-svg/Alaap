@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 import eventRoutes from './routes/eventRoutes.js';
+import historyRoutes from './routes/historyRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // API Routes
 app.use('/api/events', eventRoutes);
+app.use('/api/history', historyRoutes);
 
 // Root Status & Health Check Endpoints for Render
 app.get('/', (req, res) => {
@@ -59,5 +61,6 @@ const HOST = '0.0.0.0'; // Bind to 0.0.0.0 for Render, Docker & Cloud container 
 app.listen(PORT, HOST, () => {
   console.log(`🚀 Alaap Express Backend Server running on http://${HOST}:${PORT}`);
   console.log(`📡 Events API endpoint: http://${HOST}:${PORT}/api/events`);
+  console.log(`📜 History API endpoint: http://${HOST}:${PORT}/api/history`);
 });
 

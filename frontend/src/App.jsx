@@ -67,6 +67,18 @@ export default function App() {
         setEvents([]);
       });
 
+    // Fetch live history events directly from API server (MongoDB Atlas)
+    fetch(`${API_BASE_URL}/api/history`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.data)) {
+          setMilestones(data.data);
+        }
+      })
+      .catch((err) => {
+        console.warn('Could not fetch history events from API server:', err.message);
+      });
+
     if (savedMembers) {
       const parsedM = JSON.parse(savedMembers).map(m => {
         const found = INITIAL_MEMBERS.find(initM => initM.id === m.id || initM.name === m.name);
@@ -81,14 +93,11 @@ export default function App() {
     if (savedMilestones) {
       try {
         const parsedMilestones = JSON.parse(savedMilestones);
-        setMilestones(Array.isArray(parsedMilestones) ? parsedMilestones : []);
+        setMilestones(prev => prev.length > 0 ? prev : (Array.isArray(parsedMilestones) ? parsedMilestones : []));
       } catch (e) {
-        setMilestones([]);
+        // Fallback
       }
-    } else {
-      setMilestones([]);
     }
-    localStorage.setItem('allap_milestones_v2', JSON.stringify([]));
 
     if (savedAdminAccounts) setAdminAccounts(JSON.parse(savedAdminAccounts));
 
@@ -166,8 +175,23 @@ export default function App() {
     localStorage.setItem('allap_admin_accounts_v2', JSON.stringify(updated));
   };
 
-  // Handler to add a new photo to a specific milestone event
-  const handleAddPhotoToMilestone = (milestoneId, newPhoto) => {
+  // Handler to add a new photo to a specific milestone event (Connects to MongoDB Atlas)
+  const handleAddPhotoToMilestone = async (milestoneId, newPhoto) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}/photos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPhoto)
+      });
+      const resData = await res.json();
+      if (resData.success && resData.data) {
+        saveMilestones(milestones.map(m => m.id === milestoneId ? resData.data : m));
+        return;
+      }
+    } catch (err) {
+      console.warn('API server error adding photo:', err.message);
+    }
+
     const updated = milestones.map((m) => {
       if (m.id === milestoneId) {
         return {
@@ -180,12 +204,12 @@ export default function App() {
     saveMilestones(updated);
   };
 
-  // Handler to add a new history event (Admin & Super Admin Only)
-  const handleAddMilestoneEvent = (newEventData) => {
+  // Handler to add a new history event (Admin & Super Admin Only) - Connects to MongoDB Atlas
+  const handleAddMilestoneEvent = async (newEventData) => {
     const defaultCover = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800';
     const newMilestone = {
       id: `h_${Date.now()}`,
-      year: newEventData.year || '2026',
+      year: newEventData.year || new Date().getFullYear().toString(),
       title: newEventData.title,
       subtitle: newEventData.subtitle || 'Alaap History Milestone Event',
       description: newEventData.description || 'Special performance and community gathering captured in the Alaap archives.',
@@ -201,17 +225,47 @@ export default function App() {
             }
           ]
     };
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/history`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newMilestone)
+      });
+      const resData = await res.json();
+      if (resData.success && resData.data) {
+        saveMilestones([resData.data, ...milestones.filter(m => m.id !== resData.data.id)]);
+        return;
+      }
+    } catch (err) {
+      console.warn('API server error posting history event:', err.message);
+    }
+
     saveMilestones([newMilestone, ...milestones]);
   };
 
-  // Handler to delete a history event (Admin & Super Admin Only)
-  const handleDeleteMilestoneEvent = (milestoneId) => {
+  // Handler to delete a history event (Admin & Super Admin Only) - Connects to MongoDB Atlas
+  const handleDeleteMilestoneEvent = async (milestoneId) => {
+    try {
+      await fetch(`${API_BASE_URL}/api/history/${milestoneId}`, {
+        method: 'DELETE'
+      });
+    } catch (err) {
+      console.warn('API server error deleting history event:', err.message);
+    }
     const updated = milestones.filter((m) => m.id !== milestoneId);
     saveMilestones(updated);
   };
 
-  // Handler to clear all history events, photos, and timeline data (Admin & Super Admin Only)
-  const handleClearAllHistory = () => {
+  // Handler to clear all history events, photos, and timeline data (Admin & Super Admin Only) - Connects to MongoDB Atlas
+  const handleClearAllHistory = async () => {
+    try {
+      await fetch(`${API_BASE_URL}/api/history`, {
+        method: 'DELETE'
+      });
+    } catch (err) {
+      console.warn('API server error clearing history:', err.message);
+    }
     saveMilestones([]);
   };
 
@@ -394,8 +448,21 @@ export default function App() {
     saveEvents(updatedEvents);
   };
 
-  // Delete Photo from Milestone (Admin Only)
-  const handleDeletePhotoFromMilestone = (milestoneId, photoId) => {
+  // Delete Photo from Milestone (Admin Only) - Connects to MongoDB Atlas
+  const handleDeletePhotoFromMilestone = async (milestoneId, photoId) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}/photos/${photoId}`, {
+        method: 'DELETE'
+      });
+      const resData = await res.json();
+      if (resData.success && resData.data) {
+        saveMilestones(milestones.map(m => m.id === milestoneId ? resData.data : m));
+        return;
+      }
+    } catch (err) {
+      console.warn('API server error deleting photo:', err.message);
+    }
+
     const updated = milestones.map((m) => {
       if (m.id === milestoneId) {
         return {
@@ -440,22 +507,54 @@ export default function App() {
     }
   };
 
-  // Handler to update a history milestone event (e.g. change cover photo)
-  const handleUpdateMilestone = (milestoneId, updates) => {
+  // Handler to update a history milestone event (e.g. change cover photo) - Connects to MongoDB Atlas
+  const handleUpdateMilestone = async (milestoneId, updates) => {
+    let updatedPhotos = null;
+    const milestoneObj = milestones.find(m => m.id === milestoneId);
+    if (milestoneObj && updates.image) {
+      const existingPhotos = milestoneObj.photos ? [...milestoneObj.photos] : [];
+      if (existingPhotos.length > 0) {
+        existingPhotos[0] = { ...existingPhotos[0], url: updates.image };
+      } else {
+        existingPhotos.push({ id: `p_${Date.now()}`, url: updates.image, caption: milestoneObj.subtitle || milestoneObj.title });
+      }
+      updatedPhotos = existingPhotos;
+    }
+
+    const payload = {
+      ...updates,
+      ...(updatedPhotos ? { photos: updatedPhotos } : {})
+    };
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const resData = await res.json();
+      if (resData.success && resData.data) {
+        saveMilestones(milestones.map(m => m.id === milestoneId ? resData.data : m));
+        return;
+      }
+    } catch (err) {
+      console.warn('API server error updating milestone:', err.message);
+    }
+
     const updated = milestones.map((m) => {
       if (m.id === milestoneId) {
-        let updatedPhotos = m.photos ? [...m.photos] : [];
+        let photosArr = m.photos ? [...m.photos] : [];
         if (updates.image) {
-          if (updatedPhotos.length > 0) {
-            updatedPhotos[0] = { ...updatedPhotos[0], url: updates.image };
+          if (photosArr.length > 0) {
+            photosArr[0] = { ...photosArr[0], url: updates.image };
           } else {
-            updatedPhotos = [{ id: `p_${Date.now()}`, url: updates.image, caption: m.subtitle || m.title }];
+            photosArr = [{ id: `p_${Date.now()}`, url: updates.image, caption: m.subtitle || m.title }];
           }
         }
         return {
           ...m,
           ...updates,
-          photos: updatedPhotos
+          photos: photosArr
         };
       }
       return m;
