@@ -48,7 +48,38 @@ export default function App() {
 
   const [adminAccounts, setAdminAccounts] = useState(DEFAULT_ADMIN_ACCOUNTS);
 
-  // Load initial states from LocalStorage cache or fallback default data
+  // Helper to fetch live events directly from MongoDB Atlas API server
+  const fetchLiveEvents = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/events`);
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data)) {
+        setEvents(data.data);
+        localStorage.setItem('allap_events_v9', JSON.stringify(data.data));
+      }
+    } catch (err) {
+      console.warn('Could not fetch live events from API server:', err.message);
+    }
+  };
+
+  // Helper to fetch live history milestones directly from MongoDB Atlas API server
+  const fetchLiveHistory = async () => {
+    try {
+      let res = await fetch(`${API_BASE_URL}/api/events/history`);
+      if (!res.ok) {
+        res = await fetch(`${API_BASE_URL}/api/history`);
+      }
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data)) {
+        setMilestones(data.data);
+        localStorage.setItem('allap_milestones_v3', JSON.stringify(data.data));
+      }
+    } catch (err) {
+      console.warn('Could not fetch live history events from API server:', err.message);
+    }
+  };
+
+  // Load initial cached states & start Real-Time Live Sync Polling
   useEffect(() => {
     const savedEvents = localStorage.getItem('allap_events_v9');
     const savedMembers = localStorage.getItem('allap_members_v6');
@@ -71,35 +102,22 @@ export default function App() {
       } catch (e) {}
     }
 
-    // Fetch live hosted events directly from API server (Local or Render)
-    fetch(`${API_BASE_URL}/api/events`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-          setEvents(data.data);
-          localStorage.setItem('allap_events_v9', JSON.stringify(data.data));
-        }
-      })
-      .catch((err) => {
-        console.warn('Could not fetch live events from API server:', err.message);
-      });
+    // Initial Live Sync Fetch from MongoDB Atlas
+    fetchLiveEvents();
+    fetchLiveHistory();
 
-    // Fetch live history events directly from API server (MongoDB Atlas)
-    fetch(`${API_BASE_URL}/api/history`)
-      .then(res => {
-        if (!res.ok) return fetch(`${API_BASE_URL}/api/events/history`);
-        return res;
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-          setMilestones(data.data);
-          localStorage.setItem('allap_milestones_v3', JSON.stringify(data.data));
-        }
-      })
-      .catch((err) => {
-        console.warn('Could not fetch history events from API server:', err.message);
-      });
+    // Auto-sync polling every 8 seconds for real-time multi-device sync
+    const syncInterval = setInterval(() => {
+      fetchLiveEvents();
+      fetchLiveHistory();
+    }, 8000);
+
+    const handleWindowFocus = () => {
+      fetchLiveEvents();
+      fetchLiveHistory();
+    };
+
+    window.addEventListener('focus', handleWindowFocus);
 
     if (savedMembers) {
       const parsedM = JSON.parse(savedMembers).map(m => {
@@ -120,6 +138,11 @@ export default function App() {
         setActiveAdminUser(JSON.parse(savedActiveUser));
       }
     }
+
+    return () => {
+      clearInterval(syncInterval);
+      window.removeEventListener('focus', handleWindowFocus);
+    };
   }, []);
 
   const saveEvents = (updated) => {
