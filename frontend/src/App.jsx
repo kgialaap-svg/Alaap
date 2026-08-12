@@ -18,7 +18,14 @@ import HistoryTab, { CLUB_MILESTONES } from './pages/HistoryTab';
 import DatesTab from './pages/DatesTab';
 import AdminPage from './pages/AdminPage';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://alaap-s6yq.onrender.com';
+const getApiBaseUrl = () => {
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:5000';
+  }
+  return import.meta.env.VITE_API_URL || 'https://alaap-s6yq.onrender.com';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('home');
@@ -43,36 +50,47 @@ export default function App() {
 
   // Load initial states from LocalStorage cache or fallback default data
   useEffect(() => {
+    const savedEvents = localStorage.getItem('allap_events_v9');
     const savedMembers = localStorage.getItem('allap_members_v6');
-    const savedMilestones = localStorage.getItem('allap_milestones_v2');
+    const savedMilestones = localStorage.getItem('allap_milestones_v3');
     const savedAdminSession = localStorage.getItem('allap_admin_session_v3') || sessionStorage.getItem('allap_admin_logged_in');
     const savedActiveUser = localStorage.getItem('allap_active_admin_user_v3') || sessionStorage.getItem('allap_active_admin_user');
     const savedAdminAccounts = localStorage.getItem('allap_admin_accounts_v2');
 
-    // Clean up obsolete localStorage event cache
-    localStorage.removeItem('allap_events_v8');
+    if (savedEvents) {
+      try {
+        const parsedEvts = JSON.parse(savedEvents);
+        if (Array.isArray(parsedEvts) && parsedEvts.length > 0) setEvents(parsedEvts);
+      } catch (e) {}
+    }
+
+    if (savedMilestones) {
+      try {
+        const parsedMs = JSON.parse(savedMilestones);
+        if (Array.isArray(parsedMs) && parsedMs.length > 0) setMilestones(parsedMs);
+      } catch (e) {}
+    }
 
     // Fetch live hosted events directly from API server (Local or Render)
     fetch(`${API_BASE_URL}/api/events`)
       .then(res => res.json())
       .then(data => {
-        if (data.success && Array.isArray(data.data)) {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
           setEvents(data.data);
-        } else {
-          setEvents([]);
+          localStorage.setItem('allap_events_v9', JSON.stringify(data.data));
         }
       })
       .catch((err) => {
         console.warn('Could not fetch live events from API server:', err.message);
-        setEvents([]);
       });
 
     // Fetch live history events directly from API server (MongoDB Atlas)
     fetch(`${API_BASE_URL}/api/history`)
       .then(res => res.json())
       .then(data => {
-        if (data.success && Array.isArray(data.data)) {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
           setMilestones(data.data);
+          localStorage.setItem('allap_milestones_v3', JSON.stringify(data.data));
         }
       })
       .catch((err) => {
@@ -90,15 +108,6 @@ export default function App() {
       setMembers(INITIAL_MEMBERS);
     }
 
-    if (savedMilestones) {
-      try {
-        const parsedMilestones = JSON.parse(savedMilestones);
-        setMilestones(prev => prev.length > 0 ? prev : (Array.isArray(parsedMilestones) ? parsedMilestones : []));
-      } catch (e) {
-        // Fallback
-      }
-    }
-
     if (savedAdminAccounts) setAdminAccounts(JSON.parse(savedAdminAccounts));
 
     if (savedAdminSession === 'true') {
@@ -111,7 +120,7 @@ export default function App() {
 
   const saveEvents = (updated) => {
     setEvents(updated);
-    localStorage.setItem('allap_events_v8', JSON.stringify(updated));
+    localStorage.setItem('allap_events_v9', JSON.stringify(updated));
   };
 
   const saveMembers = (updated) => {
@@ -121,7 +130,7 @@ export default function App() {
 
   const saveMilestones = (updated) => {
     setMilestones(updated);
-    localStorage.setItem('allap_milestones_v2', JSON.stringify(updated));
+    localStorage.setItem('allap_milestones_v3', JSON.stringify(updated));
   };
 
   // Admin Auth Handlers - Persistent Login Session
@@ -350,7 +359,7 @@ export default function App() {
     return `${y}-${m}-${d}`;
   };
 
-  // 4. Create Campus Event Handler (Admin Only) - Connects to API server
+  // 4. Create Campus Event Handler (Admin Only) - Connects to API server & local storage
   const handleAddEvent = async (newEventData) => {
     const timestamp = Date.now();
     const eventId = newEventData.id || `e_${timestamp}`;
@@ -373,7 +382,10 @@ export default function App() {
       accentColor: newEventData.accentColor || (newEventData.category === 'Concert' ? 'tertiary' : 'primary')
     };
 
-    // Save directly to API server
+    // Immediately save locally for zero-latency UI display
+    saveEvents([newEvent, ...events.filter(e => e.id !== newEvent.id)]);
+
+    // Save directly to API server / MongoDB Atlas
     try {
       const res = await fetch(`${API_BASE_URL}/api/events`, {
         method: 'POST',
@@ -382,13 +394,10 @@ export default function App() {
       });
       const resData = await res.json();
       if (resData.success && resData.data) {
-        setEvents((prev) => [resData.data, ...prev.filter(e => e.id !== resData.data.id && e._id !== resData.data._id)]);
-      } else {
-        setEvents((prev) => [newEvent, ...prev]);
+        saveEvents([resData.data, ...events.filter(e => e.id !== resData.data.id && e._id !== resData.data._id)]);
       }
     } catch (err) {
       console.warn('API server offline:', err.message);
-      setEvents((prev) => [newEvent, ...prev]);
     }
   };
 
