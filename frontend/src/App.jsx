@@ -86,6 +86,10 @@ export default function App() {
 
     // Fetch live history events directly from API server (MongoDB Atlas)
     fetch(`${API_BASE_URL}/api/history`)
+      .then(res => {
+        if (!res.ok) return fetch(`${API_BASE_URL}/api/events/history`);
+        return res;
+      })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data) && data.data.length > 0) {
@@ -235,22 +239,29 @@ export default function App() {
           ]
     };
 
+    // Immediately save locally for zero-delay UI display
+    saveMilestones([newMilestone, ...milestones.filter(m => m.id !== newMilestone.id)]);
+
     try {
-      const res = await fetch(`${API_BASE_URL}/api/history`, {
+      let res = await fetch(`${API_BASE_URL}/api/history`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newMilestone)
       });
+      if (!res.ok) {
+        res = await fetch(`${API_BASE_URL}/api/events/history`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newMilestone)
+        });
+      }
       const resData = await res.json();
       if (resData.success && resData.data) {
-        saveMilestones([resData.data, ...milestones.filter(m => m.id !== resData.data.id)]);
-        return;
+        saveMilestones([resData.data, ...milestones.filter(m => m.id !== resData.data.id && m._id !== resData.data._id)]);
       }
     } catch (err) {
       console.warn('API server error posting history event:', err.message);
     }
-
-    saveMilestones([newMilestone, ...milestones]);
   };
 
   // Handler to delete a history event (Admin & Super Admin Only) - Connects to MongoDB Atlas
