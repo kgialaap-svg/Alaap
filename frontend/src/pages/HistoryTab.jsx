@@ -217,14 +217,17 @@ export default function HistoryTab({
 
   // Submit New History Event (Admin & Super Admin Only)
   const handleEventSubmit = (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     if (!isAdminLoggedIn) {
       onOpenAdminModal();
       return;
     }
 
     const finalTitle = eventTitle.trim();
-    if (!finalTitle) return;
+    if (!finalTitle) {
+      alert('⚠️ Event Title is required. Please enter a title for the history event.');
+      return;
+    }
 
     const defaultFallback = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800';
     const finalCover = eventCoverType === 'file' 
@@ -1120,8 +1123,8 @@ export default function HistoryTab({
                   )}
                 </div>
 
-                {/* Modal Actions */}
-                <div className="pt-4 flex justify-end items-center gap-3 border-t border-outline-variant/15">
+                {/* Modal Actions (Sticky bottom bar on mobile) */}
+                <div className="pt-4 flex justify-end items-center gap-3 border-t border-outline-variant/15 sticky bottom-0 bg-surface-container-lowest/95 backdrop-blur-md z-20 pb-1">
                   <button
                     type="button"
                     onClick={() => setIsAddEventModalOpen(false)}
@@ -1129,15 +1132,14 @@ export default function HistoryTab({
                   >
                     Cancel
                   </button>
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
+                  <button
                     type="submit"
-                    className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 text-slate-950 font-mono text-xs font-black tracking-wider uppercase shadow-xl hover:shadow-emerald-500/25 transition-all cursor-pointer"
+                    onClick={(e) => handleEventSubmit(e)}
+                    className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 text-slate-950 font-mono text-xs font-black tracking-wider uppercase shadow-xl hover:shadow-emerald-500/25 active:scale-95 transition-all cursor-pointer touch-manipulation min-h-[44px]"
                   >
                     <Sparkles className="w-4 h-4 stroke-[2.5]" />
                     <span>Save History Event</span>
-                  </motion.button>
+                  </button>
                 </div>
               </form>
             </motion.div>
@@ -1259,17 +1261,18 @@ export default function HistoryTab({
                 </div>
 
                 {/* Actions */}
-                <div className="pt-2 flex justify-end gap-3">
+                <div className="pt-2 flex justify-end items-center gap-3 sticky bottom-0 bg-surface-container-lowest/95 backdrop-blur-md z-20 pb-1">
                   <button
                     type="button"
                     onClick={() => setIsAddPhotoModalOpen(false)}
-                    className="px-4 py-2 text-xs font-mono font-bold text-on-surface-variant hover:text-on-surface"
+                    className="px-4 py-2 text-xs font-mono font-bold text-on-surface-variant hover:text-on-surface cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl bg-tertiary text-on-tertiary font-mono text-xs font-bold shadow-lg hover:bg-tertiary/90 transition-all cursor-pointer"
+                    onClick={(e) => handlePhotoSubmit(e)}
+                    className="px-5 py-3 rounded-xl bg-tertiary text-on-tertiary font-mono text-xs font-bold shadow-lg hover:bg-tertiary/90 active:scale-95 transition-all cursor-pointer touch-manipulation min-h-[44px]"
                   >
                     Save Photo to Archives
                   </button>
@@ -1394,7 +1397,7 @@ export default function HistoryTab({
                   </div>
                 )}
 
-                <div className="pt-4 flex justify-end items-center gap-3 border-t border-outline-variant/15">
+                <div className="pt-4 flex justify-end items-center gap-3 border-t border-outline-variant/15 sticky bottom-0 bg-surface-container-lowest/95 backdrop-blur-md z-20 pb-1">
                   <button
                     type="button"
                     onClick={() => setEditingMilestoneCover(null)}
@@ -1402,15 +1405,14 @@ export default function HistoryTab({
                   >
                     Cancel
                   </button>
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
+                  <button
                     type="submit"
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 text-slate-950 font-mono text-xs font-black tracking-wider uppercase shadow-xl hover:shadow-emerald-500/25 transition-all cursor-pointer"
+                    onClick={(e) => handleSaveMilestoneCover(e)}
+                    className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 text-slate-950 font-mono text-xs font-black tracking-wider uppercase shadow-xl hover:shadow-emerald-500/25 active:scale-95 transition-all cursor-pointer touch-manipulation min-h-[44px]"
                   >
                     <Sparkles className="w-4 h-4 stroke-[2.5]" />
                     <span>Update Cover Photo</span>
-                  </motion.button>
+                  </button>
                 </div>
               </form>
             </motion.div>
