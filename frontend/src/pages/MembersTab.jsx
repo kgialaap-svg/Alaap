@@ -7,6 +7,7 @@ import ayushImg from '../assets/ayush.jpg';
 import abhishekImg from '../assets/abhishek_kunwar.jpg';
 import shrishtiImg from '../assets/shrishti_singh.jpg';
 import chitranshImg from '../assets/chitransh_shukla.jpg';
+import jayaImg from '../assets/jaya_singh.jpg';
 
 export const INITIAL_MEMBERS = [
   {
@@ -17,6 +18,30 @@ export const INITIAL_MEMBERS = [
     avatar: pragatiImg,
     joinedDate: 'Feb 2024',
     department: 'Music & Management',
+  },
+  {
+    id: 'm_pres',
+    name: 'Jaya Singh',
+    role: 'President',
+    instrument: 'Vocalist & Event Manager',
+    avatar: jayaImg,
+    joinedDate: 'Oct 2024',
+    department: 'B-Tech',
+    branch: '',
+    year: '3rd Year',
+    bio: 'President of Alaap Music Club. Leading vocal performances, event management, and campus music initiatives.'
+  },
+  {
+    id: 'm5',
+    name: 'Chitransh Shukla',
+    role: 'Vice President',
+    instrument: 'Vocalist and Guitarist',
+    bio: 'Keeping the club in perfect sync. Coordinating logistics, sound engineering setups, and live percussion jams.',
+    avatar: chitranshImg,
+    joinedDate: 'Jan 2025',
+    department: 'Polytechnic',
+    branch: 'CSE',
+    year: '2nd Year'
   },
   {
     id: 'm2',
@@ -52,42 +77,6 @@ export const INITIAL_MEMBERS = [
     department: 'Btech',
     branch: 'Biotecnology',
     year: '2nd Year'
-  },
-  {
-    id: 'm5',
-    name: 'Chitransh Shukla',
-    role: 'Coordinator',
-    instrument: 'Vocalist and Guitarist',
-    bio: 'Keeping the club in perfect sync. Coordinating logistics, sound engineering setups, and live percussion jams.',
-    avatar: chitranshImg,
-    joinedDate: 'Jan 2025',
-    department: 'Polytechnic',
-    branch: 'CSE',
-    year: '2nd Year'
-  },
-  {
-    id: 'm6',
-    name: 'Comming soon',
-    role: 'Vice President',
-    instrument: 'Vocalist and Guitarist',
-    bio: 'Keeping the club in perfect sync. Coordinating logistics, sound engineering setups, and live percussion jams.',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200',
-    joinedDate: 'Jan 2025',
-    department: 'Still unknown',
-    branch: 'unknown',
-    year: 'unknown'
-  },
-  {
-    id: 'm7',
-    name: 'Comming soon',
-    role: 'President',
-    instrument: 'Vocalist and Guitarist',
-    bio: 'Keeping the club in perfect sync. Coordinating logistics, sound engineering setups, and live percussion jams.',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200',
-    joinedDate: 'Jan 2025',
-    department: 'unknown',
-    branch: 'unknown',
-    year: 'unknown'
   },
 ];
 
@@ -150,12 +139,27 @@ export default function MembersTab({
 
   const roles = ['All', ...Array.from(new Set(members.map(m => m.role)))];
 
-  const filteredMembers = members.filter((member) => {
-    const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          member.instrument.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = activeRole === 'All' || member.role === activeRole;
-    return matchesSearch && matchesRole;
-  });
+  const ROLE_HIERARCHY_ORDER = {
+    'Club In Charge': 1,
+    'President': 2,
+    'Vice President': 3,
+    'Secretory': 4,
+    'Secretary': 4,
+    'Coordinator': 5
+  };
+
+  const filteredMembers = members
+    .filter((member) => {
+      const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            member.instrument.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesRole = activeRole === 'All' || member.role === activeRole;
+      return matchesSearch && matchesRole;
+    })
+    .sort((a, b) => {
+      const orderA = ROLE_HIERARCHY_ORDER[a.role] || 99;
+      const orderB = ROLE_HIERARCHY_ORDER[b.role] || 99;
+      return orderA - orderB;
+    });
 
   const stopSynthesizer = () => {
     if (sequenceRef.current) {

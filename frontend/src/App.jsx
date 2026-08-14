@@ -82,7 +82,7 @@ export default function App() {
   // Load initial cached states & start Real-Time Live Sync Polling
   useEffect(() => {
     const savedEvents = localStorage.getItem('allap_events_v9');
-    const savedMembers = localStorage.getItem('allap_members_v6');
+    const savedMembers = localStorage.getItem('allap_members_v9');
     const savedMilestones = localStorage.getItem('allap_milestones_v3');
     const savedAdminSession = localStorage.getItem('allap_admin_session_v3') || sessionStorage.getItem('allap_admin_logged_in');
     const savedActiveUser = localStorage.getItem('allap_active_admin_user_v3') || sessionStorage.getItem('allap_active_admin_user');
@@ -120,11 +120,13 @@ export default function App() {
     window.addEventListener('focus', handleWindowFocus);
 
     if (savedMembers) {
-      const parsedM = JSON.parse(savedMembers).map(m => {
-        const found = INITIAL_MEMBERS.find(initM => initM.id === m.id || initM.name === m.name);
-        if (found && found.avatar) return { avatar: found.avatar, ...m };
-        return m;
-      });
+      const parsedM = JSON.parse(savedMembers)
+        .filter(m => m.name !== 'Comming soon' && m.name !== 'Coming soon')
+        .map(m => {
+          const found = INITIAL_MEMBERS.find(initM => initM.id === m.id || initM.name === m.name);
+          if (found) return { ...m, role: found.role, avatar: found.avatar || m.avatar };
+          return m;
+        });
       setMembers(parsedM);
     } else {
       setMembers(INITIAL_MEMBERS);
@@ -152,7 +154,7 @@ export default function App() {
 
   const saveMembers = (updated) => {
     setMembers(updated);
-    localStorage.setItem('allap_members_v6', JSON.stringify(updated));
+    localStorage.setItem('allap_members_v9', JSON.stringify(updated));
   };
 
   const saveMilestones = (updated) => {
