@@ -65,14 +65,14 @@ export default function App() {
   // Helper to fetch live history milestones directly from MongoDB Atlas API server
   const fetchLiveHistory = async () => {
     try {
-      let res = await fetch(`${API_BASE_URL}/api/events/history`);
+      let res = await fetch(`${API_BASE_URL}/api/history`);
       if (!res.ok) {
-        res = await fetch(`${API_BASE_URL}/api/history`);
+        res = await fetch(`${API_BASE_URL}/api/events/history`);
       }
       const data = await res.json();
-      if (data.success && Array.isArray(data.data)) {
+      if (data.success && Array.isArray(data.data) && data.data.length > 0) {
         setMilestones(data.data);
-        localStorage.setItem('allap_milestones_v3', JSON.stringify(data.data));
+        localStorage.setItem('allap_milestones_v4', JSON.stringify(data.data));
       }
     } catch (err) {
       console.warn('Could not fetch live history events from API server:', err.message);
@@ -216,11 +216,18 @@ export default function App() {
   // Handler to add a new photo to a specific milestone event (Connects to MongoDB Atlas)
   const handleAddPhotoToMilestone = async (milestoneId, newPhoto) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}/photos`, {
+      let res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}/photos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPhoto)
       });
+      if (!res.ok) {
+        res = await fetch(`${API_BASE_URL}/api/events/history/${milestoneId}/photos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newPhoto)
+        });
+      }
       const resData = await res.json();
       if (resData.success && resData.data) {
         saveMilestones(milestones.map(m => m.id === milestoneId ? resData.data : m));
@@ -292,9 +299,14 @@ export default function App() {
   // Handler to delete a history event (Admin & Super Admin Only) - Connects to MongoDB Atlas
   const handleDeleteMilestoneEvent = async (milestoneId) => {
     try {
-      await fetch(`${API_BASE_URL}/api/history/${milestoneId}`, {
+      let res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}`, {
         method: 'DELETE'
       });
+      if (!res.ok) {
+        res = await fetch(`${API_BASE_URL}/api/events/history/${milestoneId}`, {
+          method: 'DELETE'
+        });
+      }
     } catch (err) {
       console.warn('API server error deleting history event:', err.message);
     }
@@ -305,9 +317,14 @@ export default function App() {
   // Handler to clear all history events, photos, and timeline data (Admin & Super Admin Only) - Connects to MongoDB Atlas
   const handleClearAllHistory = async () => {
     try {
-      await fetch(`${API_BASE_URL}/api/history`, {
+      let res = await fetch(`${API_BASE_URL}/api/history`, {
         method: 'DELETE'
       });
+      if (!res.ok) {
+        res = await fetch(`${API_BASE_URL}/api/events/history`, {
+          method: 'DELETE'
+        });
+      }
     } catch (err) {
       console.warn('API server error clearing history:', err.message);
     }
@@ -496,9 +513,14 @@ export default function App() {
   // Delete Photo from Milestone (Admin Only) - Connects to MongoDB Atlas
   const handleDeletePhotoFromMilestone = async (milestoneId, photoId) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}/photos/${photoId}`, {
+      let res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}/photos/${photoId}`, {
         method: 'DELETE'
       });
+      if (!res.ok) {
+        res = await fetch(`${API_BASE_URL}/api/events/history/${milestoneId}/photos/${photoId}`, {
+          method: 'DELETE'
+        });
+      }
       const resData = await res.json();
       if (resData.success && resData.data) {
         saveMilestones(milestones.map(m => m.id === milestoneId ? resData.data : m));
@@ -572,11 +594,18 @@ export default function App() {
     };
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}`, {
+      let res = await fetch(`${API_BASE_URL}/api/history/${milestoneId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+      if (!res.ok) {
+        res = await fetch(`${API_BASE_URL}/api/events/history/${milestoneId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
       const resData = await res.json();
       if (resData.success && resData.data) {
         saveMilestones(milestones.map(m => m.id === milestoneId ? resData.data : m));

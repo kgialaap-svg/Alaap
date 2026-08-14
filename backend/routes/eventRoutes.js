@@ -190,6 +190,17 @@ router.delete('/history/:id', async (req, res) => {
   }
 });
 
+// @route   DELETE /api/events/history
+// @desc    Clear all history events from MongoDB
+router.delete('/history', async (req, res) => {
+  try {
+    await HistoryEvent.deleteMany({});
+    return res.status(200).json({ success: true, message: 'All history events cleared from MongoDB.' });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // @route   POST /api/events/history/:id/photos
 // @desc    Add a photo to a specific history event milestone in MongoDB
 router.post('/history/:id/photos', async (req, res) => {
