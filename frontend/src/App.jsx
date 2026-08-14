@@ -122,7 +122,7 @@ export default function App() {
     if (savedMembers) {
       const parsedM = JSON.parse(savedMembers).map(m => {
         const found = INITIAL_MEMBERS.find(initM => initM.id === m.id || initM.name === m.name);
-        if (found && found.avatar) return { ...m, avatar: found.avatar };
+        if (found && found.avatar) return { avatar: found.avatar, ...m };
         return m;
       });
       setMembers(parsedM);
@@ -611,6 +611,20 @@ export default function App() {
     saveMembers(updated);
   };
 
+  // Member Card Details Update Handler (Super Admin & Admin Protected)
+  const handleUpdateMember = (memberId, updatedFields) => {
+    const updated = members.map((m) => {
+      if (m.id === memberId) {
+        return {
+          ...m,
+          ...updatedFields
+        };
+      }
+      return m;
+    });
+    saveMembers(updated);
+  };
+
   // Restore/Recover All Removed Default Members
   const handleRestoreMembers = () => {
     const existingIds = new Set(members.map(m => m.id));
@@ -661,6 +675,7 @@ export default function App() {
             adminAccounts={adminAccounts}
             onToggleMemberAdmin={handleToggleMemberAdmin}
             onDeleteMember={handleDeleteMember}
+            onUpdateMember={handleUpdateMember}
             onAddMember={handleAddMember}
             onRestoreMembers={handleRestoreMembers}
             onOpenAdminModal={() => setIsAdminModalOpen(true)}

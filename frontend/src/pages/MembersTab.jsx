@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Search, Sparkles, Volume2, VolumeX, Crown, Shield, UserPlus, UserMinus, CheckCircle2, X, Lock, Mail, Key, AlertCircle, Trash2, Plus, Music, School, FileText, Image, Upload, RotateCcw } from 'lucide-react';
+import { Search, Sparkles, Volume2, VolumeX, Crown, Shield, UserPlus, UserMinus, CheckCircle2, X, Lock, Mail, Key, AlertCircle, Trash2, Plus, Music, School, FileText, Image, Upload, RotateCcw, Edit3 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 import pragatiImg from '../assets/pragatri_bhattacharya.jpg';
@@ -99,6 +99,7 @@ export default function MembersTab({
   adminAccounts = [],
   onToggleMemberAdmin,
   onDeleteMember,
+  onUpdateMember,
   onAddMember,
   onRestoreMembers,
   onOpenAdminModal
@@ -126,6 +127,19 @@ export default function MembersTab({
   const [newYear, setNewYear] = useState('2nd Year');
   const [newAvatar, setNewAvatar] = useState('');
   const [addMemberError, setAddMemberError] = useState('');
+
+  // Edit Member Modal State (Super Admin Feature)
+  const [editingMember, setEditingMember] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editInstrument, setEditInstrument] = useState('');
+  const [editRole, setEditRole] = useState('Coordinator');
+  const [customEditRole, setCustomEditRole] = useState('');
+  const [editDept, setEditDept] = useState('');
+  const [editBranch, setEditBranch] = useState('');
+  const [editYear, setEditYear] = useState('2nd Year');
+  const [editBio, setEditBio] = useState('');
+  const [editAvatar, setEditAvatar] = useState('');
+  const [editMemberError, setEditMemberError] = useState('');
 
   // Web Audio refs
   const audioCtxRef = useRef(null);
@@ -231,6 +245,71 @@ export default function MembersTab({
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  // Open Edit Member Modal (Super Admin Only)
+  const handleEditMemberClick = (member) => {
+    if (!isSuperAdmin) {
+      if (!isAdminLoggedIn) onOpenAdminModal();
+      return;
+    }
+    const standardRoles = ['President', 'Vice President', 'Secretory', 'Coordinator', 'Club In Charge'];
+    const isStandard = standardRoles.includes(member.role);
+    setEditingMember(member);
+    setEditName(member.name || '');
+    setEditInstrument(member.instrument || '');
+    setEditRole(isStandard ? member.role : 'Custom');
+    setCustomEditRole(isStandard ? '' : (member.role || ''));
+    setEditDept(member.department || '');
+    setEditBranch(member.branch || '');
+    setEditYear(member.year || '2nd Year');
+    setEditBio(member.bio || '');
+    setEditAvatar(member.avatar || '');
+    setEditMemberError('');
+  };
+
+  // Handle Image File Upload for Edit Member Modal
+  const handleEditImageFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditAvatar(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Submit Edit Member Modal
+  const handleEditMemberSubmit = (e) => {
+    e.preventDefault();
+    setEditMemberError('');
+
+    if (!editName.trim() || !editInstrument.trim()) {
+      setEditMemberError('Member Name and Primary Instrument are required.');
+      return;
+    }
+
+    const finalRole = editRole === 'Custom' ? (customEditRole.trim() || 'Coordinator') : editRole;
+
+    const updatedFields = {
+      name: editName.trim(),
+      instrument: editInstrument.trim(),
+      role: finalRole,
+      department: editDept.trim(),
+      branch: editBranch.trim(),
+      year: editYear,
+      bio: editBio.trim(),
+      avatar: editAvatar.trim() || editingMember.avatar
+    };
+
+    if (onUpdateMember) {
+      onUpdateMember(editingMember.id, updatedFields);
+    }
+
+    setToastMsg(`✏️ Member "${editName.trim()}" card updated successfully!`);
+    setEditingMember(null);
+    setTimeout(() => setToastMsg(''), 4000);
   };
 
   // Helper to check if a member is currently an Admin
@@ -384,23 +463,42 @@ export default function MembersTab({
             Browse active students, instrumentalists, and electronic beat designers. Connect to collaborate.
           </p>
         </div>
-        {/* Enhanced Add Member Button (Admin Only) */}
+        {/* Action Buttons Cluster (Admin / Super Admin) */}
         {isAdminLoggedIn && (
-          <button
-            onClick={() => setShowAddMemberModal(true)}
-            className="group relative flex items-center gap-2.5 px-6 py-3 rounded-2xl font-mono text-xs font-extrabold transition-all duration-300 shadow-xl cursor-pointer overflow-hidden border active:scale-95 bg-gradient-to-r from-tertiary via-amber-400 to-emerald-400 text-black border-amber-300/40 shadow-tertiary/25 hover:shadow-tertiary/40 hover:scale-[1.02]"
-          >
-            {/* Subtle Shimmer Overlay */}
-            <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -skew-x-12 translate-x-full group-hover:-translate-x-full" />
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={() => setShowAddMemberModal(true)}
+              className="group relative flex items-center gap-2.5 px-5 py-2.5 rounded-2xl font-mono text-xs font-extrabold transition-all duration-300 shadow-xl cursor-pointer overflow-hidden border active:scale-95 bg-gradient-to-r from-tertiary via-amber-400 to-emerald-400 text-black border-amber-300/40 shadow-tertiary/25 hover:shadow-tertiary/40 hover:scale-[1.02]"
+            >
+              {/* Subtle Shimmer Overlay */}
+              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -skew-x-12 translate-x-full group-hover:-translate-x-full" />
 
-            <div className="w-6 h-6 rounded-xl bg-black/15 flex items-center justify-center shrink-0 group-hover:rotate-90 transition-transform duration-300">
-              <Plus className="w-4 h-4 text-black stroke-[3]" />
-            </div>
-            <span className="tracking-wide font-sans text-xs uppercase font-black">
-              + Add New Member
-            </span>
-            <Sparkles className="w-3.5 h-3.5 text-black/70 animate-pulse" />
-          </button>
+              <div className="w-5 h-5 rounded-lg bg-black/15 flex items-center justify-center shrink-0 group-hover:rotate-90 transition-transform duration-300">
+                <Plus className="w-3.5 h-3.5 text-black stroke-[3]" />
+              </div>
+              <span className="tracking-wide font-sans text-xs uppercase font-black">
+                + Add Member
+              </span>
+              <Sparkles className="w-3.5 h-3.5 text-black/70 animate-pulse" />
+            </button>
+
+            {onRestoreMembers && (
+              <button
+                onClick={() => {
+                  if (window.confirm("Restore missing default members to the roster?")) {
+                    onRestoreMembers();
+                    setToastMsg("🔄 Restored missing default members to roster.");
+                    setTimeout(() => setToastMsg(''), 3500);
+                  }
+                }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-mono text-xs font-bold transition-all duration-200 bg-surface-container-high/80 text-on-surface-variant hover:text-on-surface border border-outline-variant/20 hover:border-outline-variant/40 shadow-md cursor-pointer active:scale-95"
+                title="Restore missing default club members"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-tertiary" />
+                <span>Restore Roster</span>
+              </button>
+            )}
+          </div>
         )}
       </div>
 
@@ -418,7 +516,7 @@ export default function MembersTab({
                 {isSuperAdmin ? "👑 Super Admin Mode Active" : "🛡️ Admin Access Active"}
               </span>
               <span className="text-[11px] text-emerald-300/80 font-body">
-                Full Controls: You can Add new members to the roster.
+                Full Controls: You can Add new members, Edit member cards (Super Admin), and manage Admin credentials.
               </span>
             </div>
           </div>
@@ -452,15 +550,15 @@ export default function MembersTab({
         </div>
 
         {/* Roles tab */}
-        <div className="flex flex-wrap gap-1 w-full sm:w-auto">
+        <div className="flex flex-wrap gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
           {roles.map((role) => (
             <button
               key={role}
               onClick={() => setActiveRole(role)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                 activeRole === role
-                  ? 'bg-tertiary/20 text-tertiary border border-tertiary/25 font-bold'
-                  : 'text-on-surface-variant hover:text-on-surface'
+                  ? 'bg-tertiary/20 text-tertiary border border-tertiary/30 font-bold shadow-sm'
+                  : 'text-on-surface-variant hover:text-on-surface border border-transparent'
               }`}
             >
               {role === 'All' ? 'ALL' : role.toUpperCase()}
@@ -481,9 +579,9 @@ export default function MembersTab({
                 className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-outline-variant/15 hover:border-outline-variant/30 transition-all duration-300 relative group shadow-lg"
               >
                 <div>
-                  {/* Top-Right Floating Action Cluster for Admins */}
+                  {/* Top-Right Floating Action Bar for Admins */}
                   {isAdminLoggedIn && (
-                    <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5">
+                    <div className="absolute top-3.5 right-3.5 z-30 flex items-center gap-1 p-1 rounded-2xl bg-slate-950/90 border border-outline-variant/30 backdrop-blur-md shadow-xl">
                       {isSuperAdmin && (
                         <button
                           type="button"
@@ -491,14 +589,31 @@ export default function MembersTab({
                             e.stopPropagation();
                             handleAdminToggleClick(member);
                           }}
-                          className={`p-2 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer shadow-md backdrop-blur-md flex items-center justify-center active:scale-95 ${
+                          className={`px-2.5 py-1 rounded-xl border text-[10px] font-mono font-extrabold transition-all cursor-pointer flex items-center gap-1 active:scale-95 ${
                             hasAdmin 
                               ? 'bg-amber-500/20 text-amber-400 border-amber-500/50 hover:bg-amber-500/30' 
-                              : 'bg-slate-950/80 text-on-surface-variant border-outline-variant/30 hover:text-amber-400 hover:border-amber-500/40'
+                              : 'bg-slate-900/80 text-on-surface-variant border-outline-variant/30 hover:text-amber-400 hover:border-amber-500/40'
                           }`}
                           title={hasAdmin ? "Manage / Revoke Admin Credentials" : "Grant Admin Privileges to Member"}
                         >
-                          <Crown className="w-3.5 h-3.5 text-amber-400" />
+                          <Crown className="w-3 h-3 text-amber-400 shrink-0" />
+                          <span className="uppercase tracking-wider font-extrabold">Admin</span>
+                        </button>
+                      )}
+
+                      {/* Edit Member Button for Super Admin */}
+                      {isSuperAdmin && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditMemberClick(member);
+                          }}
+                          className="px-2.5 py-1 rounded-xl bg-tertiary/15 hover:bg-tertiary/25 text-tertiary border border-tertiary/40 hover:border-tertiary/60 transition-all duration-200 cursor-pointer active:scale-95 flex items-center gap-1 text-[10px] font-mono font-black"
+                          title="Edit Member Card Details (Super Admin Only)"
+                        >
+                          <Edit3 className="w-3 h-3 text-tertiary stroke-[2.5] shrink-0" />
+                          <span className="uppercase tracking-wider font-extrabold">Edit</span>
                         </button>
                       )}
 
@@ -508,17 +623,17 @@ export default function MembersTab({
                           e.stopPropagation();
                           handleRemoveMemberClick(member);
                         }}
-                        className="p-2 rounded-xl bg-slate-950/90 hover:bg-red-500/20 text-red-400 border border-red-500/40 hover:border-red-500/60 backdrop-blur-md transition-all duration-200 cursor-pointer active:scale-95 flex items-center gap-1 text-xs font-mono font-black shadow-md"
+                        className="px-2.5 py-1 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/40 hover:border-red-500/60 transition-all duration-200 cursor-pointer active:scale-95 flex items-center gap-1 text-[10px] font-mono font-black"
                         title="Delete Member from Roster (Admin / Super Admin)"
                       >
-                        <Trash2 className="w-3.5 h-3.5 text-red-400 stroke-[2.5]" />
-                        <span className="text-[10px] uppercase tracking-wider font-extrabold">Delete</span>
+                        <Trash2 className="w-3 h-3 text-red-400 stroke-[2.5] shrink-0" />
+                        <span className="uppercase tracking-wider font-extrabold">Delete</span>
                       </button>
                     </div>
                   )}
 
                   {/* Header info with clean avatar image and position tag */}
-                  <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4 pr-16">
+                  <div className={`flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4 ${isAdminLoggedIn ? 'pt-8 sm:pt-6' : ''}`}>
                     <div className="shrink-0">
                       <img 
                         src={member.avatar || '/ayush.jpg'} 
@@ -914,6 +1029,234 @@ export default function MembersTab({
                   >
                     <UserPlus className="w-4 h-4" />
                     <span>Save New Member to Roster</span>
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* MODAL 3: Edit Member Details Modal (Super Admin Feature) */}
+      <AnimatePresence>
+        {editingMember && (
+          <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-4 select-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="w-full max-w-lg glass-card rounded-3xl p-6 md:p-8 border border-outline-variant/30 shadow-2xl relative overflow-hidden"
+            >
+              <button
+                onClick={() => setEditingMember(null)}
+                className="absolute top-5 right-5 p-2 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex flex-col items-center text-center space-y-2 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-inner">
+                  <Edit3 className="w-6 h-6 text-amber-400" />
+                </div>
+                <div>
+                  <h3 className="font-sans font-black text-2xl text-on-surface">
+                    Edit Member Card Details
+                  </h3>
+                  <p className="font-body text-xs text-on-surface-variant mt-0.5">
+                    👑 Super Admin Access: Update member profile, position, instrument, academic info & photo.
+                  </p>
+                </div>
+              </div>
+
+              {editMemberError && (
+                <div className="mb-4 p-3 bg-error/10 border border-error/20 rounded-xl flex items-center gap-2 text-xs font-mono text-error">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{editMemberError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleEditMemberSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-mono text-outline font-bold mb-1 uppercase tracking-wider">
+                      Member Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Rahul Sharma"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="w-full px-3 py-2 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface focus:outline-none focus:border-amber-400 text-xs font-sans font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-outline font-bold mb-1 uppercase tracking-wider">
+                      Primary Instrument *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Bass Guitar / Singer"
+                      value={editInstrument}
+                      onChange={(e) => setEditInstrument(e.target.value)}
+                      className="w-full px-3 py-2 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface focus:outline-none focus:border-amber-400 text-xs font-mono font-bold"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-mono text-outline font-bold mb-1 uppercase tracking-wider">
+                      Club Position *
+                    </label>
+                    <select
+                      value={editRole}
+                      onChange={(e) => setEditRole(e.target.value)}
+                      className="w-full px-2 py-2 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface focus:outline-none focus:border-amber-400 text-xs font-bold cursor-pointer"
+                    >
+                      <option value="President">👑 President</option>
+                      <option value="Vice President">⭐ Vice President</option>
+                      <option value="Secretory">📝 Secretory</option>
+                      <option value="Coordinator">🎯 Coordinator</option>
+                      <option value="Club In Charge">🛡️ Club In Charge</option>
+                      <option value="Custom">✏️ Custom Position...</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-outline font-bold mb-1 uppercase tracking-wider">
+                      Department
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. CSE / B-Tech"
+                      value={editDept}
+                      onChange={(e) => setEditDept(e.target.value)}
+                      className="w-full px-3 py-2 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface focus:outline-none focus:border-amber-400 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-outline font-bold mb-1 uppercase tracking-wider">
+                      Academic Year
+                    </label>
+                    <select
+                      value={editYear}
+                      onChange={(e) => setEditYear(e.target.value)}
+                      className="w-full px-2.5 py-2 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface focus:outline-none focus:border-amber-400 text-xs appearance-none"
+                    >
+                      <option value="1st Year">1st Year</option>
+                      <option value="2nd Year">2nd Year</option>
+                      <option value="3rd Year">3rd Year</option>
+                      <option value="Final Year">Final Year</option>
+                      <option value="Alumni">Alumni</option>
+                    </select>
+                  </div>
+                </div>
+
+                {editRole === 'Custom' && (
+                  <div>
+                    <label className="block text-xs font-mono text-outline font-bold mb-1 uppercase tracking-wider">
+                      Specify Custom Position Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Lead Vocalist / Sound Manager"
+                      value={customEditRole}
+                      onChange={(e) => setCustomEditRole(e.target.value)}
+                      className="w-full px-3 py-2 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface focus:outline-none focus:border-amber-400 text-xs font-bold"
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-mono text-outline font-bold mb-1 uppercase tracking-wider">
+                    Branch / Specialization
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Biotechnology / CSE"
+                    value={editBranch}
+                    onChange={(e) => setEditBranch(e.target.value)}
+                    className="w-full px-3 py-2 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface focus:outline-none focus:border-amber-400 text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-outline font-bold mb-1 uppercase tracking-wider">
+                    Bio / Short Description
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="Brief description or role in Alaap..."
+                    value={editBio}
+                    onChange={(e) => setEditBio(e.target.value)}
+                    className="w-full px-3 py-2 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface focus:outline-none focus:border-amber-400 text-xs font-body"
+                  />
+                </div>
+
+                {/* Member Photo Upload & URL Edit */}
+                <div>
+                  <label className="block text-xs font-mono text-outline font-bold mb-1.5 uppercase tracking-wider">
+                    Member Photo / Avatar Image
+                  </label>
+                  
+                  <div className="flex items-center gap-3">
+                    {editAvatar ? (
+                      <img
+                        src={editAvatar}
+                        alt="Preview"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200';
+                        }}
+                        className="w-14 h-14 rounded-2xl object-cover border-2 border-amber-400 shadow-md shrink-0"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-2xl bg-surface-container border border-outline-variant/30 flex items-center justify-center text-outline shrink-0">
+                        <Upload className="w-5 h-5" />
+                      </div>
+                    )}
+
+                    <div className="flex-1 space-y-1.5">
+                      <label className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95">
+                        <Upload className="w-4 h-4" />
+                        <span>Upload New Photo...</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleEditImageFileUpload}
+                          className="hidden"
+                        />
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Or paste Image URL..."
+                        value={editAvatar}
+                        onChange={(e) => setEditAvatar(e.target.value)}
+                        className="w-full px-3 py-1.5 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface focus:outline-none focus:border-amber-400 text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-3">
+                  <button
+                    type="button"
+                    onClick={() => setEditingMember(null)}
+                    className="px-4 py-2.5 rounded-xl border border-outline-variant/20 text-on-surface-variant font-mono text-xs font-bold hover:bg-surface-container-high"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 py-2.5 bg-gradient-to-r from-amber-500 to-tertiary text-black font-sans font-extrabold text-xs rounded-xl hover:opacity-95 active:scale-95 transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Save Member Changes</span>
                   </button>
                 </div>
               </form>
