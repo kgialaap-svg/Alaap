@@ -26,9 +26,9 @@ export default function ScrollProgressBar() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 h-1 z-50 pointer-events-none bg-surface-container-lowest/50">
+      <div className="fixed top-0 left-0 right-0 h-1.5 z-50 pointer-events-none bg-surface-container-lowest/60">
         <motion.div
-          className="h-full bg-gradient-to-r from-primary via-tertiary to-primary shadow-[0_0_12px_#2fd9f4]"
+          className="h-full bg-tertiary bg-gradient-to-r from-primary via-tertiary to-primary shadow-[0_0_12px_#2fd9f4]"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>

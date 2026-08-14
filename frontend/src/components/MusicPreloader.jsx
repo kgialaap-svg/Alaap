@@ -116,12 +116,22 @@ export default function MusicPreloader({ onComplete }) {
             </div>
 
             <div className="w-full space-y-3 pt-2">
-              <div className="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden p-0.5 border border-outline-variant/10">
+              {/* Outer Loading Bar Track */}
+              <div className="relative w-full bg-[#1c1825] rounded-full h-2.5 sm:h-3 overflow-hidden p-0 border border-tertiary/25 shadow-inner">
+                {/* Background track subtle glow */}
+                <div className="absolute inset-0 bg-tertiary/5 rounded-full" />
+
+                {/* Animated Color Filled Loading Bar */}
                 <motion.div
-                  className="h-full bg-gradient-to-r from-primary via-tertiary to-primary rounded-full"
-                  style={{ width: `${progress}%` }}
+                  className="relative h-full bg-tertiary bg-gradient-to-r from-primary via-tertiary to-primary rounded-full shadow-[0_0_12px_rgba(47,217,244,0.8),0_0_20px_rgba(208,188,255,0.5)] transition-all duration-150"
+                  style={{ width: `${progress > 0 ? Math.max(progress, 2) : 0}%` }}
                   transition={{ ease: 'easeOut' }}
-                />
+                >
+                  {/* Leading edge light beam effect */}
+                  {progress > 0 && progress < 100 && (
+                    <div className="absolute top-0 right-0 h-full w-2 bg-white/80 rounded-full blur-[1px] shadow-[0_0_8px_#ffffff]" />
+                  )}
+                </motion.div>
               </div>
 
               <div className="flex items-center justify-between text-xs font-mono">
