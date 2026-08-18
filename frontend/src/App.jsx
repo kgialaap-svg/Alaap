@@ -33,7 +33,7 @@ export default function App() {
   // Single Unified State Slot for all Registered Events
   const [events, setEvents] = useState([]);
   const [members, setMembers] = useState([]);
-  const [milestones, setMilestones] = useState([]);
+  const [milestones, setMilestones] = useState(CLUB_MILESTONES);
 
   // Admin Auth State & Accounts Persistence
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);

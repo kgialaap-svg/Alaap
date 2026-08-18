@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  BookOpen,
-  Sparkles,
-  ChevronDown,
-  ChevronUp,
-  Image as ImageIcon,
-  LayoutGrid,
-  List,
-  Plus,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Maximize2,
+import { 
+  BookOpen, 
+  Sparkles, 
+  ChevronDown, 
+  ChevronUp, 
+  Image as ImageIcon, 
+  LayoutGrid, 
+  List, 
+  Plus, 
+  X, 
+  ChevronLeft, 
+  ChevronRight, 
+  Maximize2, 
   Camera,
   ShieldCheck,
   Lock,
@@ -24,45 +24,46 @@ import {
   AlertTriangle,
   Check
 } from 'lucide-react';
+
 export const CLUB_MILESTONES = [
   {
     id: 'h_flashmob_2026',
     year: '2026',
     title: 'Flashmob',
-    subtitle: 'Alaap Musical Flashmob Event',
-    description: '',
-    tag: 'PERFORMANCE',
+    subtitle: 'Musical Flashmob Performance',
+    description: 'Interactive outdoor musical flashmob performance on campus bringing live acoustic music, singing, and energetic community vibes to the campus lawn.',
+    tag: 'FLASHMOB',
     image: '/flashmob.jpg',
     photos: [
       {
         id: 'p_flashmob_1',
         url: '/flashmob.jpg',
-        caption: 'Flashmob Musical Performance'
+        caption: 'Alaap Musical Flashmob Team Jamming Live on Campus'
       }
     ],
     createdBy: 'Club Admin'
   }
 ];
 
-export default function HistoryTab({
-  milestones = CLUB_MILESTONES,
+export default function HistoryTab({ 
+  milestones = CLUB_MILESTONES, 
   onAddEvent,
   onUpdateMilestone,
   onDeleteEvent,
   onClearAllHistory,
   onRestoreMilestones,
-  onAddPhoto,
+  onAddPhoto, 
   onDeletePhoto,
-  isAdminLoggedIn,
+  isAdminLoggedIn, 
   activeAdminUser,
-  onOpenAdminModal
+  onOpenAdminModal 
 }) {
   const [activeView, setActiveView] = useState('timeline'); // 'timeline' | 'gallery'
   const [expandedId, setExpandedId] = useState(milestones[0]?.id || null);
   const [selectedFilter, setSelectedFilter] = useState('All');
 
   // Lightbox Modal State
-  const [lightboxData, setLightboxData] = useState(null);
+  const [lightboxData, setLightboxData] = useState(null); 
 
   // Add History Event Modal State
   const [isAddEventModalOpen, setIsAddEventModalOpen] = useState(false);
@@ -108,7 +109,7 @@ export default function HistoryTab({
   };
 
   // Determine user role badge
-  const isSuperAdmin = activeAdminUser?.role === 'super_admin' ||
+  const isSuperAdmin = activeAdminUser?.role === 'super_admin' || 
     (activeAdminUser?.email || '').toLowerCase() === 'abhishekkunwer123123@gmail.com' ||
     (activeAdminUser?.username || '').toLowerCase() === 'hacker';
 
@@ -248,7 +249,7 @@ export default function HistoryTab({
     }
 
     const defaultFallback = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800';
-    const finalCover = eventCoverType === 'file'
+    const finalCover = eventCoverType === 'file' 
       ? (eventCoverFilePreview || defaultFallback)
       : (eventCoverUrl.trim() || defaultFallback);
 
@@ -384,7 +385,7 @@ export default function HistoryTab({
   };
 
   // Collect all photos across all milestones for gallery view
-  const allGalleryPhotos = milestones.flatMap(m =>
+  const allGalleryPhotos = milestones.flatMap(m => 
     (m.photos && m.photos.length > 0 ? m.photos : [{ id: m.id, url: m.image, caption: m.subtitle }]).map(p => ({
       ...p,
       milestoneId: m.id,
@@ -396,13 +397,13 @@ export default function HistoryTab({
 
   const eventTags = ['All', ...Array.from(new Set(milestones.map(m => m.tag)))];
 
-  const filteredGalleryPhotos = allGalleryPhotos.filter(p =>
+  const filteredGalleryPhotos = allGalleryPhotos.filter(p => 
     selectedFilter === 'All' || p.tag === selectedFilter
   );
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12 select-none">
-
+      
       {/* Intro Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 border-b border-outline-variant/15 pb-8">
         <div className="space-y-2 text-left">
@@ -424,20 +425,22 @@ export default function HistoryTab({
           <div className="flex items-center bg-surface-container-low p-1 rounded-xl border border-outline-variant/20 shadow-inner">
             <button
               onClick={() => setActiveView('timeline')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${activeView === 'timeline'
-                ? 'bg-primary text-on-primary shadow-md'
-                : 'text-on-surface-variant hover:text-on-surface'
-                }`}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                activeView === 'timeline'
+                  ? 'bg-primary text-on-primary shadow-md'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
             >
               <List className="w-3.5 h-3.5" />
               <span>Timeline ({milestones.length})</span>
             </button>
             <button
               onClick={() => setActiveView('gallery')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${activeView === 'gallery'
-                ? 'bg-primary text-on-primary shadow-md'
-                : 'text-on-surface-variant hover:text-on-surface'
-                }`}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                activeView === 'gallery'
+                  ? 'bg-primary text-on-primary shadow-md'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
               <span>All Photos ({allGalleryPhotos.length})</span>
@@ -579,12 +582,13 @@ export default function HistoryTab({
                 return (
                   <div key={milestone.id} className="relative pl-6 md:pl-10">
                     {/* Timeline node dot */}
-                    <div
+                    <div 
                       onClick={() => toggleExpand(milestone.id)}
-                      className={`absolute -left-[11px] top-2 w-5 h-5 rounded-full border-2 transition-all cursor-pointer z-10 flex items-center justify-center ${isExpanded
-                        ? 'bg-primary border-primary scale-125 ring-4 ring-primary/20 shadow-lg'
-                        : 'bg-background border-outline-variant hover:border-primary'
-                        }`}
+                      className={`absolute -left-[11px] top-2 w-5 h-5 rounded-full border-2 transition-all cursor-pointer z-10 flex items-center justify-center ${
+                        isExpanded 
+                          ? 'bg-primary border-primary scale-125 ring-4 ring-primary/20 shadow-lg' 
+                          : 'bg-background border-outline-variant hover:border-primary'
+                      }`}
                     >
                       <div className={`w-1.5 h-1.5 rounded-full ${isExpanded ? 'bg-on-primary' : 'bg-transparent'}`} />
                     </div>
@@ -601,19 +605,19 @@ export default function HistoryTab({
 
                     {/* Milestone History Card */}
                     <div className="glass-card rounded-3xl border border-outline-variant/20 overflow-hidden hover:border-outline-variant/40 transition-all duration-300 shadow-xl">
-
+                      
                       {/* Banner Image Preview */}
-                      <div
+                      <div 
                         onClick={() => openLightbox(milestone, 0)}
                         className="w-full h-48 md:h-60 relative cursor-pointer group overflow-hidden"
                       >
-                        <img
-                          src={milestone.image}
+                        <img 
+                          src={milestone.image} 
                           alt={milestone.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent" />
-
+                        
                         {/* Admin Change/Edit Cover Button */}
                         {isAdminLoggedIn && (
                           <button
@@ -675,7 +679,7 @@ export default function HistoryTab({
                               </button>
                             )}
 
-                            <button
+                            <button 
                               onClick={() => toggleExpand(milestone.id)}
                               className="p-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer"
                               title={isExpanded ? "Collapse Details" : "Expand Event Photos"}
@@ -691,7 +695,7 @@ export default function HistoryTab({
 
                         {/* Expandable Photo Album Gallery Strip */}
                         {isExpanded && (
-                          <motion.div
+                          <motion.div 
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             transition={{ duration: 0.4 }}
@@ -728,7 +732,7 @@ export default function HistoryTab({
                                     className="w-full h-full object-cover group-hover/thumb:scale-110 transition-transform duration-500"
                                   />
                                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover/thumb:opacity-90 transition-opacity" />
-
+                                  
                                   <p className="absolute bottom-2 left-2 right-2 text-[10px] font-body text-white line-clamp-1 leading-tight font-medium">
                                     {photo.caption}
                                   </p>
@@ -777,10 +781,11 @@ export default function HistoryTab({
               <button
                 key={tag}
                 onClick={() => setSelectedFilter(tag)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold tracking-wider transition-all cursor-pointer ${selectedFilter === tag
-                  ? 'bg-tertiary/20 text-tertiary border border-tertiary/30'
-                  : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold tracking-wider transition-all cursor-pointer ${
+                  selectedFilter === tag
+                    ? 'bg-tertiary/20 text-tertiary border border-tertiary/30'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
               >
                 {tag.toUpperCase()}
               </button>
@@ -802,60 +807,60 @@ export default function HistoryTab({
                 const milestone = milestones.find(m => m.id === photo.milestoneId) || {};
                 const pIndex = milestone?.photos ? milestone.photos.findIndex(p => p.id === photo.id) : 0;
 
-                return (
-                  <motion.div
-                    key={photo.id || index}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: index * 0.04 }}
-                    onClick={() => openLightbox(milestone, pIndex >= 0 ? pIndex : 0)}
-                    className="glass-card rounded-2xl overflow-hidden border border-outline-variant/20 hover:border-tertiary/50 transition-all duration-300 group cursor-pointer shadow-lg flex flex-col justify-between"
-                  >
-                    <div className="relative h-56 overflow-hidden">
-                      <img
-                        src={photo.url}
-                        alt={photo.caption}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80" />
+              return (
+                <motion.div
+                  key={photo.id || index}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.04 }}
+                  onClick={() => openLightbox(milestone, pIndex >= 0 ? pIndex : 0)}
+                  className="glass-card rounded-2xl overflow-hidden border border-outline-variant/20 hover:border-tertiary/50 transition-all duration-300 group cursor-pointer shadow-lg flex flex-col justify-between"
+                >
+                  <div className="relative h-56 overflow-hidden">
+                    <img
+                      src={photo.url}
+                      alt={photo.caption}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80" />
+                    
+                    <span className="absolute top-3 left-3 bg-background/80 backdrop-blur-md border border-outline-variant/20 text-[10px] font-mono font-bold px-2.5 py-1 rounded-lg text-primary shadow-sm">
+                      {photo.year} • {photo.tag}
+                    </span>
 
-                      <span className="absolute top-3 left-3 bg-background/80 backdrop-blur-md border border-outline-variant/20 text-[10px] font-mono font-bold px-2.5 py-1 rounded-lg text-primary shadow-sm">
-                        {photo.year} • {photo.tag}
-                      </span>
+                    {/* Admin Delete Action */}
+                    {isAdminLoggedIn && onDeletePhoto && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm("⚠️ Admin Confirmation: Delete photo from history archives?")) {
+                            onDeletePhoto(photo.milestoneId, photo.id);
+                          }
+                        }}
+                        className="absolute top-3 right-10 bg-black/80 hover:bg-error text-white p-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                        title="Delete Photo (Admin Only)"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
 
-                      {/* Admin Delete Action */}
-                      {isAdminLoggedIn && onDeletePhoto && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (window.confirm("⚠️ Admin Confirmation: Delete photo from history archives?")) {
-                              onDeletePhoto(photo.milestoneId, photo.id);
-                            }
-                          }}
-                          className="absolute top-3 right-10 bg-black/80 hover:bg-error text-white p-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
-                          title="Delete Photo (Admin Only)"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-
-                      <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md p-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Maximize2 className="w-4 h-4 text-tertiary" />
-                      </div>
+                    <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md p-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Maximize2 className="w-4 h-4 text-tertiary" />
                     </div>
+                  </div>
 
-                    <div className="p-4 space-y-1">
-                      <h4 className="font-sans font-bold text-sm text-on-surface group-hover:text-tertiary transition-colors">
-                        {photo.milestoneTitle}
-                      </h4>
-                      <p className="font-body text-xs text-on-surface-variant line-clamp-2">
-                        {photo.caption}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+                  <div className="p-4 space-y-1">
+                    <h4 className="font-sans font-bold text-sm text-on-surface group-hover:text-tertiary transition-colors">
+                      {photo.milestoneTitle}
+                    </h4>
+                    <p className="font-body text-xs text-on-surface-variant line-clamp-2">
+                      {photo.caption}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
           )}
         </div>
       )}
@@ -1095,16 +1100,18 @@ export default function HistoryTab({
                     <button
                       type="button"
                       onClick={() => setEventCoverType('url')}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${eventCoverType === 'url' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
-                        }`}
+                      className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                        eventCoverType === 'url' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
+                      }`}
                     >
                       Image URL
                     </button>
                     <button
                       type="button"
                       onClick={() => setEventCoverType('file')}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${eventCoverType === 'file' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
-                        }`}
+                      className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                        eventCoverType === 'file' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
+                      }`}
                     >
                       Upload File
                     </button>
@@ -1206,16 +1213,18 @@ export default function HistoryTab({
                   <button
                     type="button"
                     onClick={() => setPhotoUploadType('url')}
-                    className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${photoUploadType === 'url' ? 'bg-tertiary/20 text-tertiary border border-tertiary/30' : 'bg-surface-container text-on-surface-variant'
-                      }`}
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                      photoUploadType === 'url' ? 'bg-tertiary/20 text-tertiary border border-tertiary/30' : 'bg-surface-container text-on-surface-variant'
+                    }`}
                   >
                     Image URL
                   </button>
                   <button
                     type="button"
                     onClick={() => setPhotoUploadType('file')}
-                    className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${photoUploadType === 'file' ? 'bg-tertiary/20 text-tertiary border border-tertiary/30' : 'bg-surface-container text-on-surface-variant'
-                      }`}
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                      photoUploadType === 'file' ? 'bg-tertiary/20 text-tertiary border border-tertiary/30' : 'bg-surface-container text-on-surface-variant'
+                    }`}
                   >
                     Upload File
                   </button>
@@ -1328,24 +1337,27 @@ export default function HistoryTab({
                   <button
                     type="button"
                     onClick={() => setCoverOptionType('preset')}
-                    className={`flex-1 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${coverOptionType === 'preset' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
-                      }`}
+                    className={`flex-1 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                      coverOptionType === 'preset' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
+                    }`}
                   >
                     Preset Covers
                   </button>
                   <button
                     type="button"
                     onClick={() => setCoverOptionType('url')}
-                    className={`flex-1 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${coverOptionType === 'url' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
-                      }`}
+                    className={`flex-1 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                      coverOptionType === 'url' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
+                    }`}
                   >
                     Image URL
                   </button>
                   <button
                     type="button"
                     onClick={() => setCoverOptionType('file')}
-                    className={`flex-1 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${coverOptionType === 'file' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
-                      }`}
+                    className={`flex-1 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                      coverOptionType === 'file' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-surface-container text-on-surface-variant'
+                    }`}
                   >
                     Upload File
                   </button>
@@ -1364,8 +1376,9 @@ export default function HistoryTab({
                         key={preset.id}
                         type="button"
                         onClick={() => setSelectedCoverPreset(preset.url)}
-                        className={`relative h-20 rounded-xl overflow-hidden border-2 transition-all cursor-pointer group ${selectedCoverPreset === preset.url ? 'border-emerald-400 ring-2 ring-emerald-400/40 scale-95' : 'border-transparent opacity-70 hover:opacity-100'
-                          }`}
+                        className={`relative h-20 rounded-xl overflow-hidden border-2 transition-all cursor-pointer group ${
+                          selectedCoverPreset === preset.url ? 'border-emerald-400 ring-2 ring-emerald-400/40 scale-95' : 'border-transparent opacity-70 hover:opacity-100'
+                        }`}
                         title={preset.title}
                       >
                         <img src={preset.url} alt={preset.title} className="w-full h-full object-cover" />
