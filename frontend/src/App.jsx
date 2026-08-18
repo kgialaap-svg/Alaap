@@ -823,16 +823,16 @@ export default function App() {
 
               {/* QR Code Frame with Glass Container */}
               <a
-                href="https://chat.whatsapp.com/L5pSM2KjhvlH3PKE24vstp?s=qt&p=a&ilr=4&amv=1"
+                href="https://chat.whatsapp.com/JdbW5Z4Wiaa2HiUmN06jDP?s=qt&p=a&ilr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="relative block rounded-2xl p-3.5 bg-white shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 group/qr"
-                title="Scan or click to join 'Aalaap' WhatsApp Group"
+                title="Scan or click to join 'Alaap Club' WhatsApp Group"
               >
                 <img
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fchat.whatsapp.com%2FL5pSM2KjhvlH3PKE24vstp%3Fs%3Dqt%26p%3Da%26ilr%3D4%26amv%3D1"
+                  src="/whatsapp_qr.jpg"
                   alt="WhatsApp Group QR Code - Alaap Music Club"
-                  className="w-44 h-44 md:w-48 md:h-48 object-contain rounded-xl"
+                  className="w-44 h-44 md:w-48 md:h-48 object-cover rounded-xl"
                 />
                 <div className="absolute inset-0 rounded-2xl bg-black/50 opacity-0 group-hover/qr:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-1.5 text-white backdrop-blur-[2px]">
                   <MessageCircle className="w-8 h-8 text-emerald-400 animate-bounce" />
@@ -846,7 +846,7 @@ export default function App() {
 
               {/* Join WhatsApp Group Button */}
               <a
-                href="https://chat.whatsapp.com/L5pSM2KjhvlH3PKE24vstp?s=qt&p=a&ilr=4&amv=1"
+                href="https://chat.whatsapp.com/JdbW5Z4Wiaa2HiUmN06jDP?s=qt&p=a&ilr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-mono text-xs font-black tracking-wider uppercase transition-all shadow-md group/btn w-full justify-center"
