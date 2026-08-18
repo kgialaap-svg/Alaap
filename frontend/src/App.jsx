@@ -814,7 +814,7 @@ export default function App() {
 
               <div className="space-y-1">
                 <h3 className="font-sans text-lg font-black text-on-surface tracking-tight group-hover:text-emerald-400 transition-all duration-300">
-                  "Aalaap" The Music Club
+                  "Alaap" The Music Club
                 </h3>
                 <p className="text-xs text-on-surface-variant font-body">
                   Kashi Group of Institution
