@@ -44,20 +44,9 @@ export const INITIAL_MEMBERS = [
     year: '2nd Year'
   },
   {
-    id: 'm2',
-    name: 'Ayush Kumar Vishwakarma',
-    role: 'Secretory',
-    instrument: 'Singer & Guitarist',
-    avatar: ayushImg,
-    joinedDate: 'Oct 2024',
-    department: 'B-tech',
-    branch: 'CSE',
-    year: '2nd Year'
-  },
-  {
     id: 'm3',
     name: 'Abhishek Kunwar',
-    role: 'Coordinator',
+    role: 'Secretary',
     instrument: 'Flutist & Singer',
     bio: 'Passionate music coordinator bridging electronic and acoustic worlds. Crafting seamless collaborative sessions across campus.',
     avatar: abhishekImg,
@@ -67,24 +56,23 @@ export const INITIAL_MEMBERS = [
     year: '2nd Year'
   },
   {
-    id: 'm4',
-    name: 'Shrishti Singh',
-    role: 'Coordinator',
-    instrument: 'Vocalist & Event Manager',
-    bio: 'Passionate vocalist,Event Manager & Coordinator',
-    avatar: shrishtiImg,
+    id: 'm2',
+    name: 'Ayush Kumar Vishwakarma',
+    role: 'Secretary',
+    instrument: 'Singer & Guitarist',
+    avatar: ayushImg,
     joinedDate: 'Oct 2024',
-    department: 'Btech',
-    branch: 'Biotecnology',
+    department: 'B-tech',
+    branch: 'CSE',
     year: '2nd Year'
   },
 ];
 
-export default function MembersTab({ 
-  members, 
-  onConnect, 
+export default function MembersTab({
+  members,
+  onConnect,
   isAdminLoggedIn,
-  activeAdminUser, 
+  activeAdminUser,
   adminAccounts = [],
   onToggleMemberAdmin,
   onDeleteMember,
@@ -143,15 +131,15 @@ export default function MembersTab({
     'Club In Charge': 1,
     'President': 2,
     'Vice President': 3,
-    'Secretory': 4,
     'Secretary': 4,
-    'Coordinator': 5
+    'Coordinator': 5,
+
   };
 
   const filteredMembers = members
     .filter((member) => {
-      const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            member.instrument.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        member.instrument.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesRole = activeRole === 'All' || member.role === activeRole;
       return matchesSearch && matchesRole;
     })
@@ -167,7 +155,7 @@ export default function MembersTab({
       sequenceRef.current = null;
     }
     synthNodesRef.current.forEach(node => {
-      try { node.stop(); } catch(e){}
+      try { node.stop(); } catch (e) { }
     });
     synthNodesRef.current = [];
     setPlayingMemberId(null);
@@ -455,7 +443,7 @@ export default function MembersTab({
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12 select-none">
-      
+
       {/* Header section with Add Member action button */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
         <div>
@@ -464,7 +452,7 @@ export default function MembersTab({
             Alaap Members
           </h2>
           <p className="text-on-surface-variant font-body text-sm mt-1">
-            Browse active students, instrumentalists, and electronic beat designers. Connect to collaborate.
+            Browse active students and instrumentalists.
           </p>
         </div>
         {/* Action Buttons Cluster (Admin / Super Admin) */}
@@ -540,36 +528,7 @@ export default function MembersTab({
       )}
 
       {/* Filters Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-surface-container-low p-3 rounded-2xl border border-outline-variant/10 mb-8">
-        {/* Search */}
-        <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
-          <input
-            type="text"
-            placeholder="Search by name, instrument, gear..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-surface-container rounded-xl border border-outline-variant/20 text-on-surface focus:outline-none focus:border-tertiary text-sm"
-          />
-        </div>
 
-        {/* Roles tab */}
-        <div className="flex flex-wrap gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
-          {roles.map((role) => (
-            <button
-              key={role}
-              onClick={() => setActiveRole(role)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                activeRole === role
-                  ? 'bg-tertiary/20 text-tertiary border border-tertiary/30 font-bold shadow-sm'
-                  : 'text-on-surface-variant hover:text-on-surface border border-transparent'
-              }`}
-            >
-              {role === 'All' ? 'ALL' : role.toUpperCase()}
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* Roster Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -593,11 +552,10 @@ export default function MembersTab({
                             e.stopPropagation();
                             handleAdminToggleClick(member);
                           }}
-                          className={`px-2.5 py-1 rounded-xl border text-[10px] font-mono font-extrabold transition-all cursor-pointer flex items-center gap-1 active:scale-95 ${
-                            hasAdmin 
-                              ? 'bg-amber-500/20 text-amber-400 border-amber-500/50 hover:bg-amber-500/30' 
-                              : 'bg-slate-900/80 text-on-surface-variant border-outline-variant/30 hover:text-amber-400 hover:border-amber-500/40'
-                          }`}
+                          className={`px-2.5 py-1 rounded-xl border text-[10px] font-mono font-extrabold transition-all cursor-pointer flex items-center gap-1 active:scale-95 ${hasAdmin
+                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/50 hover:bg-amber-500/30'
+                            : 'bg-slate-900/80 text-on-surface-variant border-outline-variant/30 hover:text-amber-400 hover:border-amber-500/40'
+                            }`}
                           title={hasAdmin ? "Manage / Revoke Admin Credentials" : "Grant Admin Privileges to Member"}
                         >
                           <Crown className="w-3 h-3 text-amber-400 shrink-0" />
@@ -639,8 +597,8 @@ export default function MembersTab({
                   {/* Header info with clean avatar image and position tag */}
                   <div className={`flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-4 ${isAdminLoggedIn ? 'pt-8 sm:pt-6' : ''}`}>
                     <div className="shrink-0">
-                      <img 
-                        src={member.avatar || '/ayush.jpg'} 
+                      <img
+                        src={member.avatar || '/ayush.jpg'}
                         alt={member.name}
                         onError={(e) => {
                           e.target.onerror = null;
@@ -701,11 +659,10 @@ export default function MembersTab({
 
                       <button
                         onClick={() => handlePlayToggle(member)}
-                        className={`p-2 rounded-lg border flex items-center justify-center transition-all cursor-pointer ${
-                          playingMemberId === member.id
-                            ? 'bg-primary/20 text-primary border-primary/30'
-                            : 'bg-surface-container-high border-outline-variant/10 text-on-surface-variant hover:text-on-surface'
-                        }`}
+                        className={`p-2 rounded-lg border flex items-center justify-center transition-all cursor-pointer ${playingMemberId === member.id
+                          ? 'bg-primary/20 text-primary border-primary/30'
+                          : 'bg-surface-container-high border-outline-variant/10 text-on-surface-variant hover:text-on-surface'
+                          }`}
                         title={playingMemberId === member.id ? "Stop Vibe Check" : "Alaap Vibe Check"}
                       >
                         {playingMemberId === member.id ? (
@@ -987,7 +944,7 @@ export default function MembersTab({
                   <label className="block text-xs font-mono text-outline font-bold mb-1.5 uppercase tracking-wider">
                     Upload Member Photo / Avatar
                   </label>
-                  
+
                   <div className="flex items-center gap-3">
                     {newAvatar ? (
                       <img
@@ -1207,7 +1164,7 @@ export default function MembersTab({
                   <label className="block text-xs font-mono text-outline font-bold mb-1.5 uppercase tracking-wider">
                     Member Photo / Avatar Image
                   </label>
-                  
+
                   <div className="flex items-center gap-3">
                     {editAvatar ? (
                       <img

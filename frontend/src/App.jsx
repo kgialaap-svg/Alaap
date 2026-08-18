@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { Instagram, ExternalLink, MessageCircle } from 'lucide-react';
 // Components
 import Header from './components/Header';
@@ -680,7 +680,7 @@ export default function App() {
             events={events}
             onTabChange={(tab) => {
               setCurrentTab(tab);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              window.scrollTo(0, 0);
             }}
           />
         );
@@ -773,7 +773,7 @@ export default function App() {
         currentTab={currentTab}
         onTabChange={(tab) => {
           setCurrentTab(tab);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo(0, 0);
         }}
         isAdminLoggedIn={isAdminLoggedIn}
         activeAdminUser={activeAdminUser}
@@ -781,19 +781,9 @@ export default function App() {
         onAdminLogout={handleAdminLogout}
       />
 
-      {/* Main Tab Screen Component with Animated Tab Transition */}
+      {/* Main Tab Screen Component with Direct Switch (No Animation) */}
       <main className="flex-grow pt-20 pb-28 md:pb-16 relative z-10">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentTab}
-            initial={{ opacity: 0, y: 15, scale: 0.99 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -15, scale: 0.99 }}
-            transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-          >
-            {renderActiveScreen()}
-          </motion.div>
-        </AnimatePresence>
+        {renderActiveScreen()}
       </main>
 
       {/* Modern Dual Community QR Codes & Footer Section */}
@@ -947,7 +937,7 @@ export default function App() {
         currentTab={currentTab}
         onTabChange={(tab) => {
           setCurrentTab(tab);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo(0, 0);
         }}
       />
 
