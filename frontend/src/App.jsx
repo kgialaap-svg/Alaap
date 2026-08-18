@@ -127,7 +127,11 @@ export default function App() {
           if (found) return { ...m, role: found.role, avatar: found.avatar || m.avatar };
           return m;
         });
-      setMembers(parsedM);
+      const existingIds = new Set(parsedM.map(m => m.id));
+      const existingNames = new Set(parsedM.map(m => m.name?.toLowerCase()));
+      const missingDefaults = INITIAL_MEMBERS.filter(m => !existingIds.has(m.id) && !existingNames.has(m.name?.toLowerCase()));
+      const combinedMembers = missingDefaults.length > 0 ? [...parsedM, ...missingDefaults] : parsedM;
+      setMembers(combinedMembers);
     } else {
       setMembers(INITIAL_MEMBERS);
     }

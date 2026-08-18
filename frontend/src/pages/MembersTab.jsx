@@ -8,6 +8,10 @@ import abhishekImg from '../assets/abhishek_kunwar.jpg';
 import shrishtiImg from '../assets/shrishti_singh.jpg';
 import chitranshImg from '../assets/chitransh_shukla.jpg';
 import jayaImg from '../assets/jaya_singh.jpg';
+import pragyaImg from '../assets/pragya_rai.png';
+import sanskritiImg from '../assets/sanskriti_srivastava.png';
+import nandiniImg from '../assets/nandini_pandey.png';
+import nitinImg from '../assets/nitin_mondal.jpg';
 
 export const INITIAL_MEMBERS = [
   {
@@ -48,7 +52,7 @@ export const INITIAL_MEMBERS = [
     name: 'Abhishek Kunwar',
     role: 'Secretary',
     instrument: 'Flutist & Singer',
-    bio: 'Passionate music coordinator bridging electronic and acoustic worlds. Crafting seamless collaborative sessions across campus.',
+    bio: 'Passionate music secretary bridging electronic and acoustic worlds. Crafting seamless collaborative sessions across campus.',
     avatar: abhishekImg,
     joinedDate: 'september-2025',
     department: 'BCA',
@@ -65,6 +69,54 @@ export const INITIAL_MEMBERS = [
     department: 'B-tech',
     branch: 'CSE',
     year: '2nd Year'
+  },
+  {
+    id: 'm_pragya',
+    name: 'Pragya Rai',
+    role: 'Core Member',
+    instrument: 'Vocalist',
+    avatar: pragyaImg,
+    joinedDate: 'Feb 2025',
+    department: 'B-Tech',
+    branch: 'CSE',
+    year: '3rd Year',
+    bio: 'Core Member of Alaap Music Club. Vocalist passionate about campus musical performances and live ensemble sessions.'
+  },
+  {
+    id: 'm_sanskriti',
+    name: 'Sanskriti Srivastava',
+    role: 'Core Member',
+    instrument: 'Vocalist',
+    avatar: sanskritiImg,
+    joinedDate: 'Feb 2025',
+    department: 'Btech',
+    branch: 'CSE',
+    year: '3rd Year',
+    bio: 'Core Member of Alaap Music Club. Vocalist passionate about acoustic harmony and live vocal performances.'
+  },
+  {
+    id: 'm_nandini',
+    name: 'Nandini Pandey',
+    role: 'Core Member',
+    instrument: 'Vocalist',
+    avatar: nandiniImg,
+    joinedDate: 'Feb 2025',
+    department: 'BBA',
+    branch: '',
+    year: '3rd Year',
+    bio: 'Core Member of Alaap Music Club. Vocalist bringing energy and melody to campus musical sessions.'
+  },
+  {
+    id: 'm_nitin',
+    name: 'Nitin Mondal',
+    role: 'Core Member',
+    instrument: 'Vocalist and Guitarist',
+    avatar: nitinImg,
+    joinedDate: 'Feb 2025',
+    department: 'B.Pharma',
+    branch: '',
+    year: '3rd Year',
+    bio: 'Core Member of Alaap Music Club. Vocalist and guitarist crafting melodic guitar jams and live acoustics.'
   },
 ];
 
@@ -132,8 +184,9 @@ export default function MembersTab({
     'President': 2,
     'Vice President': 3,
     'Secretary': 4,
-    'Coordinator': 5,
-
+    'Secretory': 4,
+    'Core Member': 5,
+    'Coordinator': 6,
   };
 
   const filteredMembers = members
@@ -886,7 +939,8 @@ export default function MembersTab({
                     >
                       <option value="President">👑 President</option>
                       <option value="Vice President">⭐ Vice President</option>
-                      <option value="Secretory">📝 Secretory</option>
+                      <option value="Secretary">📝 Secretary</option>
+                      <option value="Core Member">🎵 Core Member</option>
                       <option value="Coordinator">🎯 Coordinator</option>
                       <option value="Club In Charge">🛡️ Club In Charge</option>
                       <option value="Custom">✏️ Custom Position...</option>
@@ -1079,7 +1133,8 @@ export default function MembersTab({
                     >
                       <option value="President">👑 President</option>
                       <option value="Vice President">⭐ Vice President</option>
-                      <option value="Secretory">📝 Secretory</option>
+                      <option value="Secretary">📝 Secretary</option>
+                      <option value="Core Member">🎵 Core Member</option>
                       <option value="Coordinator">🎯 Coordinator</option>
                       <option value="Club In Charge">🛡️ Club In Charge</option>
                       <option value="Custom">✏️ Custom Position...</option>
