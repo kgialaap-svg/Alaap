@@ -800,24 +800,24 @@ export default function App() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="w-full glass-card rounded-3xl p-6 md:p-8 border border-emerald-500/25 shadow-2xl relative group overflow-hidden flex flex-col items-center justify-between"
+            className="w-full glass-card rounded-3xl p-6 md:p-8 border border-emerald-500/20 shadow-2xl relative group overflow-hidden flex flex-col items-center justify-between"
           >
             {/* Subtle WhatsApp Green Gradient Glow on Hover */}
             <div className="absolute -inset-[1px] bg-gradient-to-r from-emerald-500 via-teal-500 to-green-400 rounded-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none -z-10 blur-md" />
 
             <div className="flex flex-col items-center space-y-4 w-full">
               {/* Header Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold tracking-wider uppercase shadow-sm">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-mono font-bold tracking-wider uppercase shadow-sm">
                 <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Official WhatsApp Group</span>
               </div>
 
               <div className="space-y-1">
-                <h3 className="font-sans text-lg font-black text-on-surface tracking-tight group-hover:text-emerald-400 transition-all duration-300">
+                <h3 className="font-sans text-lg font-black text-on-surface tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-emerald-400 group-hover:to-teal-300 transition-all duration-300">
                   "Alaap" The Music Club
                 </h3>
                 <p className="text-xs text-on-surface-variant font-body">
-                  Kashi Group of Institution
+                  Scan QR code to join official WhatsApp group
                 </p>
               </div>
 
@@ -830,18 +830,18 @@ export default function App() {
                 title="Scan or click to join 'Alaap Club' WhatsApp Group"
               >
                 <img
-                  src="/whatsapp_qr.jpg"
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fchat.whatsapp.com%2FJdbW5Z4Wiaa2HiUmN06jDP%3Fs%3Dqt%26p%3Da%26ilr"
                   alt="WhatsApp Group QR Code - Alaap Music Club"
-                  className="w-44 h-44 md:w-48 md:h-48 object-cover rounded-xl"
+                  className="w-44 h-44 md:w-48 md:h-48 object-contain rounded-xl"
                 />
-                <div className="absolute inset-0 rounded-2xl bg-black/50 opacity-0 group-hover/qr:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-1.5 text-white backdrop-blur-[2px]">
-                  <MessageCircle className="w-8 h-8 text-emerald-400 animate-bounce" />
-                  <span className="text-xs font-mono font-bold bg-emerald-500 text-slate-950 px-3 py-1 rounded-full">Join WhatsApp</span>
+                <div className="absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover/qr:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-1.5 text-white backdrop-blur-[2px]">
+                  <MessageCircle className="w-7 h-7 text-emerald-400 animate-bounce" />
+                  <span className="text-xs font-mono font-bold bg-black/70 px-3 py-1 rounded-full border border-white/20">Join WhatsApp</span>
                 </div>
               </a>
 
               <p className="text-xs font-body text-on-surface-variant max-w-xs">
-                Scan this QR code using WhatsApp camera to join this group
+                Scan QR code or click below to join us on WhatsApp
               </p>
 
               {/* Join WhatsApp Group Button */}
@@ -849,11 +849,11 @@ export default function App() {
                 href="https://chat.whatsapp.com/JdbW5Z4Wiaa2HiUmN06jDP?s=qt&p=a&ilr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-mono text-xs font-black tracking-wider uppercase transition-all shadow-md group/btn w-full justify-center"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/30 text-on-surface font-mono text-xs font-bold tracking-wider hover:border-emerald-500/40 transition-all shadow-md group/btn w-full justify-center"
               >
-                <MessageCircle className="w-4 h-4 fill-slate-950" />
+                <MessageCircle className="w-4 h-4 text-emerald-400" />
                 <span>Join WhatsApp Group</span>
-                <ExternalLink className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                <ExternalLink className="w-3.5 h-3.5 text-emerald-400 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
               </a>
             </div>
           </motion.div>
