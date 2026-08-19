@@ -37,6 +37,7 @@ import flashmobImg3 from '../assets/flashmob_3.jpg';
 import farewellImg1 from '../assets/farewell_1.jpg';
 import farewellImg2 from '../assets/farewell_2.jpg';
 import farewellImg3 from '../assets/farewell_3.jpg';
+import farewellImg4 from '../assets/farewell_4.jpg';
 
 export const CLUB_MILESTONES = [
   {
@@ -127,8 +128,13 @@ export const CLUB_MILESTONES = [
     subtitle: 'Grand Musical Stage Performance & Seniors Farewell Night',
     description: 'A landmark live musical concert performance by Alaap Music Club at Kashi Group of Institutions, Varanasi. Featuring ensemble vocalists, acoustic guitarists, and dynamic stage lighting celebrating our graduating senior musical talents.',
     tag: 'FAREWELL',
-    image: farewellImg2,
+    image: farewellImg4,
     photos: [
+      {
+        id: 'p_farewell_4',
+        url: farewellImg4,
+        caption: 'Wide Stage Panorama View of Alaap Vocalists & Guitarist Performing Live at Farewell 2026'
+      },
       {
         id: 'p_farewell_2',
         url: farewellImg2,
