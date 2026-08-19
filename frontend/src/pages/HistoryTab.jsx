@@ -33,6 +33,7 @@ import clubActivityImg3 from '../assets/club_activity_3.jpg';
 import clubActivityImg4 from '../assets/club_activity_4.jpg';
 import flashmobImg1 from '../assets/flashmob_1.jpg';
 import flashmobImg2 from '../assets/flashmob_2.jpg';
+import flashmobImg3 from '../assets/flashmob_3.jpg';
 
 export const CLUB_MILESTONES = [
   {
@@ -96,8 +97,13 @@ export const CLUB_MILESTONES = [
     subtitle: 'Musical Flashmob Performance & Campus Lawn Acoustic Jams',
     description: 'Interactive outdoor musical flashmob performance on campus bringing live acoustic music, singing, and energetic community vibes to the campus lawn.',
     tag: 'FLASHMOB',
-    image: flashmobImg1,
+    image: flashmobImg3,
     photos: [
+      {
+        id: 'p_flashmob_3',
+        url: flashmobImg3,
+        caption: 'Alaap Musical Flashmob Team Group Photo with Event Posters on Campus Lawn'
+      },
       {
         id: 'p_flashmob_1',
         url: flashmobImg1,

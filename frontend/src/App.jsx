@@ -75,7 +75,7 @@ export default function App() {
         const missingDefaults = CLUB_MILESTONES.filter(m => !existingIds.has(m.id) && !existingIds.has(m.title?.toLowerCase()));
         const combined = missingDefaults.length > 0 ? [...data.data, ...missingDefaults] : data.data;
         setMilestones(combined);
-        localStorage.setItem('allap_milestones_v8', JSON.stringify(combined));
+        localStorage.setItem('allap_milestones_v9', JSON.stringify(combined));
       }
     } catch (err) {
       console.warn('Could not fetch live history events from API server:', err.message);
@@ -86,7 +86,7 @@ export default function App() {
   useEffect(() => {
     const savedEvents = localStorage.getItem('allap_events_v9');
     const savedMembers = localStorage.getItem('allap_members_v9');
-    const savedMilestones = localStorage.getItem('allap_milestones_v8') || localStorage.getItem('allap_milestones_v7') || localStorage.getItem('allap_milestones_v6');
+    const savedMilestones = localStorage.getItem('allap_milestones_v9') || localStorage.getItem('allap_milestones_v8') || localStorage.getItem('allap_milestones_v7');
     const savedAdminSession = localStorage.getItem('allap_admin_session_v3') || sessionStorage.getItem('allap_admin_logged_in');
     const savedActiveUser = localStorage.getItem('allap_active_admin_user_v3') || sessionStorage.getItem('allap_active_admin_user');
     const savedAdminAccounts = localStorage.getItem('allap_admin_accounts_v2');
