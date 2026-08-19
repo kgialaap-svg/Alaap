@@ -71,8 +71,11 @@ export default function App() {
       }
       const data = await res.json();
       if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-        setMilestones(data.data);
-        localStorage.setItem('allap_milestones_v4', JSON.stringify(data.data));
+        const existingIds = new Set(data.data.map(m => m.id || m.title?.toLowerCase()));
+        const missingDefaults = CLUB_MILESTONES.filter(m => !existingIds.has(m.id) && !existingIds.has(m.title?.toLowerCase()));
+        const combined = missingDefaults.length > 0 ? [...data.data, ...missingDefaults] : data.data;
+        setMilestones(combined);
+        localStorage.setItem('allap_milestones_v4', JSON.stringify(combined));
       }
     } catch (err) {
       console.warn('Could not fetch live history events from API server:', err.message);
@@ -83,7 +86,7 @@ export default function App() {
   useEffect(() => {
     const savedEvents = localStorage.getItem('allap_events_v9');
     const savedMembers = localStorage.getItem('allap_members_v9');
-    const savedMilestones = localStorage.getItem('allap_milestones_v3');
+    const savedMilestones = localStorage.getItem('allap_milestones_v4') || localStorage.getItem('allap_milestones_v3');
     const savedAdminSession = localStorage.getItem('allap_admin_session_v3') || sessionStorage.getItem('allap_admin_logged_in');
     const savedActiveUser = localStorage.getItem('allap_active_admin_user_v3') || sessionStorage.getItem('allap_active_admin_user');
     const savedAdminAccounts = localStorage.getItem('allap_admin_accounts_v2');
@@ -98,8 +101,17 @@ export default function App() {
     if (savedMilestones) {
       try {
         const parsedMs = JSON.parse(savedMilestones);
-        if (Array.isArray(parsedMs) && parsedMs.length > 0) setMilestones(parsedMs);
-      } catch (e) {}
+        if (Array.isArray(parsedMs) && parsedMs.length > 0) {
+          const existingIds = new Set(parsedMs.map(m => m.id || m.title?.toLowerCase()));
+          const missingDefaults = CLUB_MILESTONES.filter(m => !existingIds.has(m.id) && !existingIds.has(m.title?.toLowerCase()));
+          const combined = missingDefaults.length > 0 ? [...parsedMs, ...missingDefaults] : parsedMs;
+          setMilestones(combined);
+        } else {
+          setMilestones(CLUB_MILESTONES);
+        }
+      } catch (e) {
+        setMilestones(CLUB_MILESTONES);
+      }
     }
 
     // Initial Live Sync Fetch from MongoDB Atlas

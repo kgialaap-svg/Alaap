@@ -25,7 +25,32 @@ import {
   Check
 } from 'lucide-react';
 
+import independenceDayImg1 from '../assets/independence_day_1.jpg';
+import independenceDayImg2 from '../assets/independence_day_2.jpg';
+
 export const CLUB_MILESTONES = [
+  {
+    id: 'h_independence_day_2026',
+    year: '2026',
+    title: 'Independence Day',
+    subtitle: 'Patriotic Musical Performance & Flag Hoisting Celebration',
+    description: 'A soulful and vibrant live musical performance by Alaap Music Club on Independence Day, featuring patriotic acoustics, flute melodies, and ensemble vocal performances.',
+    tag: 'PATRIOTIC',
+    image: independenceDayImg1,
+    photos: [
+      {
+        id: 'p_ind_day_1',
+        url: independenceDayImg1,
+        caption: 'Alaap Vocalists & Instrumentalists Performing Live on Independence Day'
+      },
+      {
+        id: 'p_ind_day_2',
+        url: independenceDayImg2,
+        caption: 'Alaap Core Team & Members Celebrating Independence Day Together'
+      }
+    ],
+    createdBy: 'Club Admin'
+  },
   {
     id: 'h_flashmob_2026',
     year: '2026',

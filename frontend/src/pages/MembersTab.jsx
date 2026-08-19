@@ -8,9 +8,9 @@ import abhishekImg from '../assets/abhishek_kunwar.jpg';
 import shrishtiImg from '../assets/shrishti_singh.jpg';
 import chitranshImg from '../assets/chitransh_shukla.jpg';
 import jayaImg from '../assets/jaya_singh.jpg';
-import pragyaImg from '../assets/pragya_rai.png';
-import sanskritiImg from '../assets/sanskriti_srivastava.png';
-import nandiniImg from '../assets/nandini_pandey.png';
+import pragyaImg from '../assets/Pragya.jpg';
+import sanskritiImg from '../assets/sanskriti.jpeg';
+import nandiniImg from '../assets/Nandini.jpg';
 import nitinImg from '../assets/nitin_mondal.jpg';
 
 export const INITIAL_MEMBERS = [
