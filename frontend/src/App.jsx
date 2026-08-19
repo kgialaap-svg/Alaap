@@ -75,7 +75,7 @@ export default function App() {
         const missingDefaults = CLUB_MILESTONES.filter(m => !existingIds.has(m.id) && !existingIds.has(m.title?.toLowerCase()));
         const combined = missingDefaults.length > 0 ? [...data.data, ...missingDefaults] : data.data;
         setMilestones(combined);
-        localStorage.setItem('allap_milestones_v5', JSON.stringify(combined));
+        localStorage.setItem('allap_milestones_v6', JSON.stringify(combined));
       }
     } catch (err) {
       console.warn('Could not fetch live history events from API server:', err.message);
@@ -86,7 +86,7 @@ export default function App() {
   useEffect(() => {
     const savedEvents = localStorage.getItem('allap_events_v9');
     const savedMembers = localStorage.getItem('allap_members_v9');
-    const savedMilestones = localStorage.getItem('allap_milestones_v5') || localStorage.getItem('allap_milestones_v4') || localStorage.getItem('allap_milestones_v3');
+    const savedMilestones = localStorage.getItem('allap_milestones_v6') || localStorage.getItem('allap_milestones_v5') || localStorage.getItem('allap_milestones_v4');
     const savedAdminSession = localStorage.getItem('allap_admin_session_v3') || sessionStorage.getItem('allap_admin_logged_in');
     const savedActiveUser = localStorage.getItem('allap_active_admin_user_v3') || sessionStorage.getItem('allap_active_admin_user');
     const savedAdminAccounts = localStorage.getItem('allap_admin_accounts_v2');
@@ -105,7 +105,12 @@ export default function App() {
           const existingIds = new Set(parsedMs.map(m => m.id || m.title?.toLowerCase()));
           const missingDefaults = CLUB_MILESTONES.filter(m => !existingIds.has(m.id) && !existingIds.has(m.title?.toLowerCase()));
           const combined = missingDefaults.length > 0 ? [...parsedMs, ...missingDefaults] : parsedMs;
-          setMilestones(combined);
+          // Ensure default milestones keep up-to-date cover image references
+          const synced = combined.map(m => {
+            const def = CLUB_MILESTONES.find(d => d.id === m.id);
+            return def ? { ...m, image: def.image, photos: def.photos } : m;
+          });
+          setMilestones(synced);
         } else {
           setMilestones(CLUB_MILESTONES);
         }

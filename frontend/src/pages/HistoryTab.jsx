@@ -40,17 +40,17 @@ export const CLUB_MILESTONES = [
     subtitle: 'Acoustic Jamming & Vocal Rehearsal Session',
     description: 'An interactive indoor acoustic jamming session and practice workshop by Alaap Music Club, featuring vocalists and acoustic guitarists coming together to rehearse and collaborate.',
     tag: 'JAMMING',
-    image: clubActivityImg1,
+    image: clubActivityImg2,
     photos: [
-      {
-        id: 'p_club_act_1',
-        url: clubActivityImg1,
-        caption: 'Acoustic Jamming & Vocal Rehearsal Session in Classroom'
-      },
       {
         id: 'p_club_act_2',
         url: clubActivityImg2,
         caption: 'Circle Acoustic Jam Practice with Alaap Team Members'
+      },
+      {
+        id: 'p_club_act_1',
+        url: clubActivityImg1,
+        caption: 'Acoustic Jamming & Vocal Rehearsal Session in Classroom'
       },
       {
         id: 'p_club_act_3',
@@ -675,7 +675,11 @@ export default function HistoryTab({
                         <img 
                           src={milestone.image} 
                           alt={milestone.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                          onError={(e) => {
+                            const fallback = milestone.photos?.[0]?.url || clubActivityImg2;
+                            if (e.target.src !== fallback) e.target.src = fallback;
+                          }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent" />
                         
