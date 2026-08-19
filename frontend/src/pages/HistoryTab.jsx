@@ -944,9 +944,9 @@ export default function HistoryTab({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setLightboxData(null)}
-            className="fixed inset-0 z-50 bg-black/92 backdrop-blur-xl flex flex-col items-center justify-between p-4 md:p-8 select-none"
+            className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-between p-4 sm:p-6 md:p-8 select-none"
           >
-            {/* Pinned Floating Close / Cut Button (Top-Right) - Never Cut Off */}
+            {/* Pinned Floating Close / Cut Button (Top-Right) - Layered on top of navbar with z-[10000] */}
             <motion.button
               whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
@@ -954,7 +954,7 @@ export default function HistoryTab({
                 e.stopPropagation();
                 setLightboxData(null);
               }}
-              className="fixed top-4 right-4 md:top-6 md:right-6 z-[100] p-3 rounded-full bg-slate-900/90 hover:bg-red-500 text-white border border-white/30 hover:border-red-400 shadow-2xl transition-all duration-300 cursor-pointer flex items-center justify-center min-w-[48px] min-h-[48px] backdrop-blur-md active:scale-95"
+              className="fixed top-3 right-4 sm:top-5 sm:right-6 md:top-6 md:right-8 z-[10000] p-3 rounded-full bg-slate-900/95 hover:bg-red-500 text-white border border-white/30 hover:border-red-400 shadow-2xl transition-all duration-300 cursor-pointer flex items-center justify-center min-w-[50px] min-h-[50px] backdrop-blur-md active:scale-95 ring-2 ring-white/10"
               title="Close Fullscreen View (Esc)"
               aria-label="Close"
             >
@@ -1064,7 +1064,7 @@ export default function HistoryTab({
       {/* ADD HISTORY EVENT MODAL (ADMIN & SUPER ADMIN ONLY) */}
       <AnimatePresence>
         {isAddEventModalOpen && (
-          <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto">
+          <div className="fixed inset-0 z-[9999] bg-background/80 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto pt-20">
             <motion.div
               initial={{ opacity: 0, scale: 0.92, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -1268,7 +1268,7 @@ export default function HistoryTab({
       {/* ADD PHOTO MODAL (ADMIN & SUPER ADMIN ONLY) */}
       <AnimatePresence>
         {isAddPhotoModalOpen && (
-          <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[9999] bg-background/80 backdrop-blur-md flex items-center justify-center p-4 pt-20">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -1404,7 +1404,7 @@ export default function HistoryTab({
       {/* CHANGE HISTORY MILESTONE COVER MODAL (ADMIN ONLY) */}
       <AnimatePresence>
         {editingMilestoneCover && (
-          <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-xl flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[9999] bg-background/80 backdrop-blur-xl flex items-center justify-center p-4 pt-20">
             <motion.div
               initial={{ opacity: 0, scale: 0.92, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
