@@ -31,6 +31,8 @@ import clubActivityImg1 from '../assets/club_activity_1.jpg';
 import clubActivityImg2 from '../assets/club_activity_2.jpg';
 import clubActivityImg3 from '../assets/club_activity_3.jpg';
 import clubActivityImg4 from '../assets/club_activity_4.jpg';
+import flashmobImg1 from '../assets/flashmob_1.jpg';
+import flashmobImg2 from '../assets/flashmob_2.jpg';
 
 export const CLUB_MILESTONES = [
   {
@@ -91,15 +93,20 @@ export const CLUB_MILESTONES = [
     id: 'h_flashmob_2026',
     year: '2026',
     title: 'Flashmob',
-    subtitle: 'Musical Flashmob Performance',
+    subtitle: 'Musical Flashmob Performance & Campus Lawn Acoustic Jams',
     description: 'Interactive outdoor musical flashmob performance on campus bringing live acoustic music, singing, and energetic community vibes to the campus lawn.',
     tag: 'FLASHMOB',
-    image: '/flashmob.jpg',
+    image: flashmobImg1,
     photos: [
       {
         id: 'p_flashmob_1',
-        url: '/flashmob.jpg',
-        caption: 'Alaap Musical Flashmob Team Jamming Live on Campus'
+        url: flashmobImg1,
+        caption: 'Alaap Musical Flashmob Team Performing Live on Campus Lawn'
+      },
+      {
+        id: 'p_flashmob_2',
+        url: flashmobImg2,
+        caption: 'Acoustic Guitarist & Vocalists Jamming Outdoors during Flashmob'
       }
     ],
     createdBy: 'Club Admin'
