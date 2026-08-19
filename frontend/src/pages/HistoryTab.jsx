@@ -937,28 +937,48 @@ export default function HistoryTab({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex flex-col items-center justify-between p-4 md:p-8"
+            onClick={() => setLightboxData(null)}
+            className="fixed inset-0 z-50 bg-black/92 backdrop-blur-xl flex flex-col items-center justify-between p-4 md:p-8 select-none"
           >
+            {/* Pinned Floating Close / Cut Button (Top-Right) - Never Cut Off */}
+            <motion.button
+              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxData(null);
+              }}
+              className="fixed top-4 right-4 md:top-6 md:right-6 z-[100] p-3 rounded-full bg-slate-900/90 hover:bg-red-500 text-white border border-white/30 hover:border-red-400 shadow-2xl transition-all duration-300 cursor-pointer flex items-center justify-center min-w-[48px] min-h-[48px] backdrop-blur-md active:scale-95"
+              title="Close Fullscreen View (Esc)"
+              aria-label="Close"
+            >
+              <X className="w-6 h-6 stroke-[2.5]" />
+            </motion.button>
+
             {/* Top Bar */}
-            <div className="w-full max-w-5xl flex justify-between items-center text-white z-10">
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono text-tertiary uppercase font-bold tracking-widest">
+            <div 
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-5xl flex justify-between items-center text-white z-10 pr-14 md:pr-16"
+            >
+              <div className="space-y-0.5 max-w-[65%] sm:max-w-md">
+                <span className="text-[10px] font-mono text-tertiary uppercase font-bold tracking-widest block truncate">
                   {lightboxData.year} • {lightboxData.tag}
                 </span>
-                <h3 className="font-sans font-bold text-base md:text-lg text-white">
+                <h3 className="font-sans font-bold text-sm sm:text-base md:text-lg text-white truncate">
                   {lightboxData.milestoneTitle}
                 </h3>
               </div>
 
-              <div className="flex items-center gap-4">
-                <span className="text-xs font-mono text-outline">
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-xs font-mono text-outline font-bold bg-white/10 px-3 py-1 rounded-full border border-white/15">
                   {lightboxData.currentIndex + 1} / {lightboxData.photos.length}
                 </span>
 
                 {/* Admin Delete Action inside Lightbox */}
                 {isAdminLoggedIn && onDeletePhoto && (
                   <button
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       const currentP = lightboxData.photos[lightboxData.currentIndex];
                       if (currentP && window.confirm("⚠️ Admin Confirmation: Delete this photo from event history?")) {
                         onDeletePhoto(lightboxData.milestoneId, currentP.id);
@@ -968,25 +988,24 @@ export default function HistoryTab({
                     className="p-2 rounded-full bg-error/20 hover:bg-error text-white transition-colors cursor-pointer"
                     title="Delete Photo (Admin Only)"
                   >
-                    <Trash2 className="w-5 h-5" />
+                    <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 )}
-
-                <button
-                  onClick={() => setLightboxData(null)}
-                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-                >
-                  <X className="w-6 h-6" />
-                </button>
               </div>
             </div>
 
             {/* Main Image Stage */}
-            <div className="relative w-full max-w-4xl flex-1 flex items-center justify-center my-4 overflow-hidden">
+            <div 
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-4xl flex-1 flex items-center justify-center my-4 overflow-hidden"
+            >
               {lightboxData.photos.length > 1 && (
                 <button
-                  onClick={prevLightboxPhoto}
-                  className="absolute left-2 md:left-4 z-20 p-3 rounded-full bg-black/60 hover:bg-tertiary/40 border border-white/20 text-white transition-all cursor-pointer active:scale-90"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevLightboxPhoto();
+                  }}
+                  className="absolute left-2 md:left-4 z-20 p-3 rounded-full bg-black/70 hover:bg-tertiary/50 border border-white/20 text-white transition-all cursor-pointer active:scale-90 shadow-xl"
                   title="Previous Photo (Left Arrow)"
                 >
                   <ChevronLeft className="w-6 h-6" />
@@ -1000,13 +1019,16 @@ export default function HistoryTab({
                 transition={{ duration: 0.3 }}
                 src={lightboxData.photos[lightboxData.currentIndex]?.url}
                 alt={lightboxData.photos[lightboxData.currentIndex]?.caption}
-                className="max-h-[70vh] max-w-full object-contain rounded-2xl shadow-2xl border border-white/10"
+                className="max-h-[72vh] max-w-full object-contain rounded-2xl shadow-2xl border border-white/10"
               />
 
               {lightboxData.photos.length > 1 && (
                 <button
-                  onClick={nextLightboxPhoto}
-                  className="absolute right-2 md:right-4 z-20 p-3 rounded-full bg-black/60 hover:bg-tertiary/40 border border-white/20 text-white transition-all cursor-pointer active:scale-90"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextLightboxPhoto();
+                  }}
+                  className="absolute right-2 md:right-4 z-20 p-3 rounded-full bg-black/70 hover:bg-tertiary/50 border border-white/20 text-white transition-all cursor-pointer active:scale-90 shadow-xl"
                   title="Next Photo (Right Arrow)"
                 >
                   <ChevronRight className="w-6 h-6" />
@@ -1015,11 +1037,14 @@ export default function HistoryTab({
             </div>
 
             {/* Bottom Caption & Controls */}
-            <div className="w-full max-w-2xl bg-surface-container-high/80 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center space-y-2">
-              <p className="font-body text-sm text-on-surface">
+            <div 
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-2xl bg-surface-container-high/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-white/10 text-center space-y-1.5 shadow-2xl"
+            >
+              <p className="font-body text-xs sm:text-sm text-on-surface font-medium">
                 {lightboxData.photos[lightboxData.currentIndex]?.caption}
               </p>
-              <div className="flex justify-center gap-4 text-xs font-mono text-tertiary">
+              <div className="flex justify-center gap-4 text-[11px] font-mono text-tertiary font-bold">
                 <span>Alaap Event Archives</span>
               </div>
             </div>
