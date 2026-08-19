@@ -795,6 +795,9 @@ export default function HistoryTab({
                                     src={photo.url}
                                     alt={photo.caption || milestone.title}
                                     className="w-full h-full object-cover group-hover/thumb:scale-110 transition-transform duration-500"
+                                    onError={(e) => {
+                                      if (e.target.src !== clubActivityImg2) e.target.src = clubActivityImg2;
+                                    }}
                                   />
                                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover/thumb:opacity-90 transition-opacity" />
                                   
@@ -886,6 +889,9 @@ export default function HistoryTab({
                       src={photo.url}
                       alt={photo.caption}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        if (e.target.src !== clubActivityImg2) e.target.src = clubActivityImg2;
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80" />
                     
@@ -1020,6 +1026,9 @@ export default function HistoryTab({
                 src={lightboxData.photos[lightboxData.currentIndex]?.url}
                 alt={lightboxData.photos[lightboxData.currentIndex]?.caption}
                 className="max-h-[72vh] max-w-full object-contain rounded-2xl shadow-2xl border border-white/10"
+                onError={(e) => {
+                  if (e.target.src !== clubActivityImg2) e.target.src = clubActivityImg2;
+                }}
               />
 
               {lightboxData.photos.length > 1 && (
