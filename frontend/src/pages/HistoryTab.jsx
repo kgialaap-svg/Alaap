@@ -772,15 +772,26 @@ export default function HistoryTab({
                                 Event Photo Album ({milestone.photos ? milestone.photos.length : 1})
                               </span>
 
-                              {isAdminLoggedIn && (
+                              <div className="flex items-center gap-3">
+                                {isAdminLoggedIn && (
+                                  <button
+                                    onClick={() => handleAddPhotoClick(milestone.id)}
+                                    className="text-xs font-mono text-tertiary hover:underline flex items-center gap-1 cursor-pointer font-bold"
+                                  >
+                                    <Plus className="w-3.5 h-3.5" />
+                                    <span>Add Photo</span>
+                                  </button>
+                                )}
+
                                 <button
-                                  onClick={() => handleAddPhotoClick(milestone.id)}
-                                  className="text-xs font-mono text-tertiary hover:underline flex items-center gap-1 cursor-pointer font-bold"
+                                  onClick={() => toggleExpand(milestone.id)}
+                                  className="text-[11px] font-mono text-on-surface-variant hover:text-error flex items-center gap-1 cursor-pointer font-bold bg-surface-container hover:bg-error/15 px-2.5 py-1 rounded-lg border border-outline-variant/20 transition-all active:scale-95"
+                                  title="Close / Collapse Event Photos"
                                 >
-                                  <Plus className="w-3.5 h-3.5" />
-                                  <span>Add Photo</span>
+                                  <X className="w-3.5 h-3.5" />
+                                  <span>Close Album</span>
                                 </button>
-                              )}
+                              </div>
                             </div>
 
                             {/* Thumbnail Grid */}
@@ -946,7 +957,7 @@ export default function HistoryTab({
             onClick={() => setLightboxData(null)}
             className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-between p-4 sm:p-6 md:p-8 select-none"
           >
-            {/* Pinned Floating Close / Cut Button (Top-Right) - Layered on top of navbar with z-[10000] */}
+            {/* Pinned Floating Close / Cut Button (Top-Right) - Placed safely below top nav bar (top-20 = 80px Y offset) */}
             <motion.button
               whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
@@ -954,7 +965,7 @@ export default function HistoryTab({
                 e.stopPropagation();
                 setLightboxData(null);
               }}
-              className="fixed top-3 right-4 sm:top-5 sm:right-6 md:top-6 md:right-8 z-[10000] p-3 rounded-full bg-slate-900/95 hover:bg-red-500 text-white border border-white/30 hover:border-red-400 shadow-2xl transition-all duration-300 cursor-pointer flex items-center justify-center min-w-[50px] min-h-[50px] backdrop-blur-md active:scale-95 ring-2 ring-white/10"
+              className="fixed top-20 right-4 sm:top-20 sm:right-6 md:top-22 md:right-8 z-[10000] p-3 rounded-full bg-slate-900/95 hover:bg-red-500 text-white border border-white/30 hover:border-red-400 shadow-2xl transition-all duration-300 cursor-pointer flex items-center justify-center min-w-[48px] min-h-[48px] backdrop-blur-md active:scale-95 ring-2 ring-white/10"
               title="Close Fullscreen View (Esc)"
               aria-label="Close"
             >
@@ -964,9 +975,9 @@ export default function HistoryTab({
             {/* Top Bar */}
             <div 
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-5xl flex justify-between items-center text-white z-10 pr-14 md:pr-16"
+              className="w-full max-w-5xl flex justify-between items-center text-white z-10 pt-2 sm:pt-0"
             >
-              <div className="space-y-0.5 max-w-[65%] sm:max-w-md">
+              <div className="space-y-0.5 max-w-[60%] sm:max-w-md">
                 <span className="text-[10px] font-mono text-tertiary uppercase font-bold tracking-widest block truncate">
                   {lightboxData.year} • {lightboxData.tag}
                 </span>
@@ -975,10 +986,23 @@ export default function HistoryTab({
                 </h3>
               </div>
 
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs font-mono text-outline font-bold bg-white/10 px-3 py-1 rounded-full border border-white/15">
+              <div className="flex items-center gap-2.5 shrink-0">
+                <span className="text-xs font-mono text-outline font-bold bg-white/10 px-3 py-1.5 rounded-full border border-white/15">
                   {lightboxData.currentIndex + 1} / {lightboxData.photos.length}
                 </span>
+
+                {/* Dedicated Inline Close / Cut Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxData(null);
+                  }}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-500/90 hover:bg-red-600 text-white font-mono text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer shrink-0 border border-red-400/40"
+                  title="Close Photo View (Esc)"
+                >
+                  <X className="w-4 h-4 stroke-[3]" />
+                  <span className="text-[11px]">Close</span>
+                </button>
 
                 {/* Admin Delete Action inside Lightbox */}
                 {isAdminLoggedIn && onDeletePhoto && (
