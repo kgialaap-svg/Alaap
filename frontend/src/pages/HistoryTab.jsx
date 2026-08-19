@@ -27,8 +27,44 @@ import {
 
 import independenceDayImg1 from '../assets/independence_day_1.jpg';
 import independenceDayImg2 from '../assets/independence_day_2.jpg';
+import clubActivityImg1 from '../assets/club_activity_1.jpg';
+import clubActivityImg2 from '../assets/club_activity_2.jpg';
+import clubActivityImg3 from '../assets/club_activity_3.jpg';
+import clubActivityImg4 from '../assets/club_activity_4.jpg';
 
 export const CLUB_MILESTONES = [
+  {
+    id: 'h_club_activity_2026',
+    year: '2026',
+    title: 'Club Activity',
+    subtitle: 'Acoustic Jamming & Vocal Rehearsal Session',
+    description: 'An interactive indoor acoustic jamming session and practice workshop by Alaap Music Club, featuring vocalists and acoustic guitarists coming together to rehearse and collaborate.',
+    tag: 'JAMMING',
+    image: clubActivityImg1,
+    photos: [
+      {
+        id: 'p_club_act_1',
+        url: clubActivityImg1,
+        caption: 'Acoustic Jamming & Vocal Rehearsal Session in Classroom'
+      },
+      {
+        id: 'p_club_act_2',
+        url: clubActivityImg2,
+        caption: 'Circle Acoustic Jam Practice with Alaap Team Members'
+      },
+      {
+        id: 'p_club_act_3',
+        url: clubActivityImg3,
+        caption: 'Full Team Musical Ensemble & Practice Gathering'
+      },
+      {
+        id: 'p_club_act_4',
+        url: clubActivityImg4,
+        caption: 'Acoustic Guitar Performance & Vocal Studio Session'
+      }
+    ],
+    createdBy: 'Club Admin'
+  },
   {
     id: 'h_independence_day_2026',
     year: '2026',
