@@ -34,8 +34,8 @@ import clubActivityImg4 from '../assets/club_activity_4.jpg';
 
 export const CLUB_MILESTONES = [
   {
-    id: 'h_club_activity_2026',
-    year: '2026',
+    id: 'h_club_activity_2025',
+    year: '2025',
     title: 'Club Activity',
     subtitle: 'Acoustic Jamming & Vocal Rehearsal Session',
     description: 'An interactive indoor acoustic jamming session and practice workshop by Alaap Music Club, featuring vocalists and acoustic guitarists coming together to rehearse and collaborate.',
